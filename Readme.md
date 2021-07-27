@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Никита Тощев](https://up.htmlacademy.ru/ecmascript/15/user/550217).
-* Наставник: `Неизвестно`.
+* Наставник: [Владимир Артюхов](https://htmlacademy.ru/profile/artman).
 
 ---
 
