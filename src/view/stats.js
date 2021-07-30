@@ -1,6 +1,5 @@
 export const createStatsTemplate = () => (
-  `
-  <section class="statistics">
+  `<section class="statistics">
     <h2 class="visually-hidden">Trip statistics</h2>
 
     <div class="statistics__item">
@@ -14,6 +13,5 @@ export const createStatsTemplate = () => (
     <div class="statistics__item">
       <canvas class="statistics__chart" id="time-spend" width="900"></canvas>
     </div>
-  </section>
-  `
+  </section>`
 );

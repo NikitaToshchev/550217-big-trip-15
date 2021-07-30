@@ -1,6 +1,5 @@
 export const createEventFormTemplate = () => (
-  `
-  <form class="event event--edit" action="#" method="post">
+  `<form class="event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -99,6 +98,5 @@ export const createEventFormTemplate = () => (
     </header>
     <section class="event__details">
     </section>
-  </form>
-  `
+  </form>`
 );
