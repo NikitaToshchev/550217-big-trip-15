@@ -1,4 +1,4 @@
-export const POINTS_TYPES = [
+export const POINT_TYPES = [
   'taxi',
   'bus',
   'train',
