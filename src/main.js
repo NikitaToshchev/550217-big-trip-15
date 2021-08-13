@@ -42,7 +42,7 @@ const renderPoint = (listElement, point) => {
     listElement.replaceChild(eventFormEditComponent.getElement(), pointComponent.getElement());
   };
 
-  const replaceFormToCard = () => {
+  const replaceFormToPoint = () => {
     listElement.replaceChild(pointComponent.getElement(), eventFormEditComponent.getElement());
   };
 
@@ -52,7 +52,7 @@ const renderPoint = (listElement, point) => {
 
   eventFormEditComponent.getElement().addEventListener('submit', (evt) => {
     evt.preventDefault();
-    replaceFormToCard();
+    replaceFormToPoint();
   });
   render(listElement, pointComponent.getElement(), RenderPosition.BEFOREEND);
 };
