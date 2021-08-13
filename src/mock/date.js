@@ -18,7 +18,6 @@ export const getDurationTime = (dateTo, dateFrom) => {
     return `${diffDays}D ${diffHours}H ${diffMinutes}M`;
   } else if (diffHours > 0) {
     return `${diffHours}H ${diffMinutes}M`;
-  } else {
-    return `${diffMinutes}M`;
   }
+  return `${diffMinutes}M`;
 };

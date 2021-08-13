@@ -1,8 +1,9 @@
-import { POINTS_TYPES } from '../const.js';
+import { POINT_TYPES } from '../const.js';
 import { CITY_POINTS } from '../mock/mock-data.js';
 import { createEventFormOffersTemplate } from './event-form-offers.js';
 import { createEventFormDestinationTemplate } from './event-form-destination.js';
 import dayjs from 'dayjs';
+import { createElement } from '../utils.js';
 
 export const createEventFormNewPointTemplate = (point) => {
   const { id, type, destination, basePrice, dateTo, dateFrom, offers } = point;
@@ -25,7 +26,7 @@ export const createEventFormNewPointTemplate = (point) => {
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Event type</legend>
 
-          ${POINTS_TYPES.map((pointType) => (`<div class="event__type-item">
+          ${POINT_TYPES.map((pointType) => (`<div class="event__type-item">
           <input id="event-type-${pointType}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}">
           <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-${id}">${pointType}</label>
         </div>`)).join('\n')}
@@ -69,3 +70,25 @@ export const createEventFormNewPointTemplate = (point) => {
   </section>
 </form>`;
 };
+
+export default class EventFormNewPoint {
+  constructor(point) {
+    this._element = null;
+    this._point = point;
+  }
+
+  getTemplate() {
+    return createEventFormNewPointTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

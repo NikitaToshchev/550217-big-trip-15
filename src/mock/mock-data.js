@@ -6,14 +6,6 @@ export const DESCRIPTIONS = [
   'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
 ];
 
-export const DESTINATION_NAMES = [
-  'Amsterdam',
-  'Geneva',
-  'Chamonix',
-  'Liverpool',
-  'London',
-];
-
 export const PHOTOS = [
   {
     src: 'http://picsum.photos/248/152?r=1',
@@ -49,7 +41,7 @@ export const PHOTOS = [
   },
 ];
 
-export const OFFERS_BY_TYPE = {
+export const OffersByType = {
   'taxi': [
     {
       title: 'Upgrade to a business class',

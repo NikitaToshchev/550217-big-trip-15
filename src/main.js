@@ -1,47 +1,62 @@
-import { createMenuTemplate } from './view/menu.js';
-import { createInfoTemplate } from './view/info.js';
-import { createInfoMainTemplate } from './view/info-main.js';
-import { createCostTemplate } from './view/cost.js';
-import { createFiltersTemplate } from './view/filters.js';
-import { createSortTemplate } from './view/sort.js';
-import { createListTemplate } from './view/list.js';
-import { createPointTemplate } from './view/point.js';
+import { RenderPosition, render } from './utils.js';
 import { generatePoint } from './mock/point.js';
-import { createEventFormEditTemplate } from './view/event-form-edit.js';
 
-const RenderPosition = {
-  AFTERBEGIN: 'afterbegin',
-  BEFOREEND: 'beforeend',
-};
+// import ListEmptyView from './view/list-empty.js';
+// import StatsView from './view/stats.js';
+// import LoadingView from './view/loading.js';
+// import EventFormNewPoint from './view/event-form-new-point.js';
+
+import TotalCostView from './view/total-cost.js';
+import FilterView from './view/filter.js';
+import InfoMainView from './view/info-main.js';
+import InfoView from './view/info.js';
+import ListView from './view/list.js';
+import SortView from './view/sort.js';
+import MenuView from './view/menu.js';
+import PointView from './view/point.js';
+import EventFormEditView from './view/event-form-edit.js';
 
 const POINT_COUNT = 20;
-const points = new Array(POINT_COUNT).fill().map(generatePoint);
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
+export const points = new Array(POINT_COUNT).fill().map(generatePoint);
 
 const navigationElement = document.querySelector('.trip-controls__navigation');
 const eventsElement = document.querySelector('.trip-events');
 const filtersElement = document.querySelector('.trip-controls__filters');
 const mainElement = document.querySelector('.trip-main');
+const infoComponent = new InfoView();
+const listComponent = new ListView();
 
-render(navigationElement, createMenuTemplate(), RenderPosition.BEFOREEND);
-render(mainElement, createInfoTemplate(), RenderPosition.AFTERBEGIN);
+render(navigationElement, new MenuView().getElement(), RenderPosition.BEFOREEND);
+render(mainElement, infoComponent.getElement(), RenderPosition.AFTERBEGIN);
+render(infoComponent.getElement(), new TotalCostView().getElement(), RenderPosition.BEFOREEND);
+render(infoComponent.getElement(), new InfoMainView().getElement(), RenderPosition.AFTERBEGIN);
+render(filtersElement, new FilterView().getElement(), RenderPosition.BEFOREEND);
+render(eventsElement, new SortView().getElement(), RenderPosition.BEFOREEND);
+render(eventsElement, listComponent.getElement(), RenderPosition.BEFOREEND);
 
-const infoElement = document.querySelector('.trip-info');
+const renderPoint = (listElement, point) => {
+  const pointComponent = new PointView(point);
+  const eventFormEditComponent = new EventFormEditView(point);
 
-render(infoElement, createInfoMainTemplate(), RenderPosition.AFTERBEGIN);
-render(infoElement, createCostTemplate(), RenderPosition.BEFOREEND);
-render(filtersElement, createFiltersTemplate(), RenderPosition.BEFOREEND);
-render(eventsElement, createSortTemplate(), RenderPosition.BEFOREEND);
-render(eventsElement, createListTemplate(), RenderPosition.BEFOREEND);
+  const replacePointToForm = () => {
+    listElement.replaceChild(eventFormEditComponent.getElement(), pointComponent.getElement());
+  };
 
-const listElement = document.querySelector('.trip-events__list');
+  const replaceFormToPoint = () => {
+    listElement.replaceChild(pointComponent.getElement(), eventFormEditComponent.getElement());
+  };
 
-render(eventsElement, createEventFormEditTemplate(points[0]), RenderPosition.BEFOREEND);
+  pointComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+    replacePointToForm();
+  });
+
+  eventFormEditComponent.getElement().addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    replaceFormToPoint();
+  });
+  render(listElement, pointComponent.getElement(), RenderPosition.BEFOREEND);
+};
 
 points.forEach((point) => {
-  render(listElement, createPointTemplate(point), RenderPosition.BEFOREEND);
+  renderPoint(listComponent.getElement(), point);
 });
-
