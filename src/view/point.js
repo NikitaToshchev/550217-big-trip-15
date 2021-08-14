@@ -16,8 +16,7 @@ const createPointTemplate = (point) => {
   const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
   const offersList = offers.length !== 0 ? createPointOffersListTemplate(offers) : '';
 
-  return `<li class="trip-events__item">
-    <div class="event">
+  return `<div class="event">
       <time class="event__date" datetime="${dateTimeFrom}">${dateFromMonthDay}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
@@ -46,8 +45,7 @@ const createPointTemplate = (point) => {
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>
-    </div>
-  </li>`;
+    </div>`;
 };
 
 export default class Point {

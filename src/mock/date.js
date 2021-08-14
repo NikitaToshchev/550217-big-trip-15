@@ -9,10 +9,17 @@ export const generateDate = () => {
   return dayjs().add(daysGap, 'day').add(minuteGap, 'minute').toDate();
 };
 
+const addleadingZero = (n) => {
+  if (n < 10) {
+    return `0${n}`;
+  }
+  return n;
+};
+
 export const getDurationTime = (dateTo, dateFrom) => {
-  const diffDays = dayjs(dateTo).diff(dayjs(dateFrom), 'day');
-  const diffHours = dayjs(dateTo).subtract(diffDays, 'day').diff(dateFrom, 'hour');
-  const diffMinutes = dayjs(dateTo).subtract(diffDays, 'day').subtract(diffHours, 'hour').diff(dateFrom, 'minute');
+  const diffDays = addleadingZero(dayjs(dateTo).diff(dayjs(dateFrom), 'day'));
+  const diffHours = addleadingZero(dayjs(dateTo).subtract(diffDays, 'day').diff(dateFrom, 'hour'));
+  const diffMinutes = addleadingZero(dayjs(dateTo).subtract(diffDays, 'day').subtract(diffHours, 'hour').diff(dateFrom, 'minute'));
 
   if (diffDays > 0) {
     return `${diffDays}D ${diffHours}H ${diffMinutes}M`;
