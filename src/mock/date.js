@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { getRandomNum } from '../utils.js';
+import { getRandomNum } from '../utils/common.js';
 
 export const generateDate = () => {
   const maxDaysGap = 10;
@@ -9,12 +9,7 @@ export const generateDate = () => {
   return dayjs().add(daysGap, 'day').add(minuteGap, 'minute').toDate();
 };
 
-const addleadingZero = (n) => {
-  if (n < 10) {
-    return `0${n}`;
-  }
-  return n;
-};
+const addleadingZero = (n) => String(n).padStart(2, '0');
 
 export const getDurationTime = (dateTo, dateFrom) => {
   const diffDays = addleadingZero(dayjs(dateTo).diff(dayjs(dateFrom), 'day'));

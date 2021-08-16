@@ -1,26 +1,11 @@
-import { createElement } from '../utils.js';
+import AbstractView from './abstract.js';
 
 const createListItemTemplate = () => (
   '<li class="trip-events__item"></li>'
 );
 
-export default class ListItem {
-  constructor() {
-    this._element = null;
-  }
-
+export default class ListItem extends AbstractView {
   getTemplate() {
     return createListItemTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,5 +1,5 @@
-import { RenderPosition, render } from './utils.js';
 import { generatePoint } from './mock/point.js';
+import { RenderPosition, render, replace } from './utils/render.js';
 
 // import StatsView from './view/stats.js';
 // import LoadingView from './view/loading.js';
@@ -26,11 +26,11 @@ const filtersElement = document.querySelector('.trip-controls__filters');
 const mainElement = document.querySelector('.trip-main');
 const infoComponent = new InfoView();
 
-render(navigationElement, new MenuView().getElement(), RenderPosition.BEFOREEND);
-render(mainElement, infoComponent.getElement(), RenderPosition.AFTERBEGIN);
-render(infoComponent.getElement(), new TotalCostView().getElement(), RenderPosition.BEFOREEND);
-render(infoComponent.getElement(), new InfoMainView().getElement(), RenderPosition.AFTERBEGIN);
-render(filtersElement, new FilterView().getElement(), RenderPosition.BEFOREEND);
+render(navigationElement, new MenuView(), RenderPosition.BEFOREEND);
+render(mainElement, infoComponent, RenderPosition.AFTERBEGIN);
+render(infoComponent, new TotalCostView(), RenderPosition.BEFOREEND);
+render(infoComponent, new InfoMainView(), RenderPosition.AFTERBEGIN);
+render(filtersElement, new FilterView(), RenderPosition.BEFOREEND);
 
 const renderPoint = (listElement, point) => {
   const pointComponent = new PointView(point);
@@ -38,25 +38,24 @@ const renderPoint = (listElement, point) => {
   const listItem = new ListItemView();
 
   const replacePointToForm = () => {
-    listItem.getElement().replaceChild(eventFormEditComponent.getElement(), pointComponent.getElement());
+    replace(eventFormEditComponent, pointComponent);
   };
 
   const replaceFormToPoint = () => {
-    listItem.getElement().replaceChild(pointComponent.getElement(), eventFormEditComponent.getElement());
+    replace(pointComponent, eventFormEditComponent);
   };
 
-  pointComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+  pointComponent.setRollupBtnClickHandler(() => {
     replacePointToForm();
     document.addEventListener('keydown', onEscKeyDown);
   });
 
-  eventFormEditComponent.getElement().addEventListener('submit', (evt) => {
-    evt.preventDefault();
+  eventFormEditComponent.setFormSubmitHandler(() => {
     replaceFormToPoint();
     document.removeEventListener('keydown', onEscKeyDown);
   });
 
-  eventFormEditComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+  eventFormEditComponent.setRollupBtnClickHandler(() => {
     replaceFormToPoint();
   });
 
@@ -68,22 +67,23 @@ const renderPoint = (listElement, point) => {
     }
   };
 
-  render(listElement, listItem.getElement(), RenderPosition.BEFOREEND);
-  render(listItem.getElement(), pointComponent.getElement(), RenderPosition.BEFOREEND);
+  render(listElement, listItem, RenderPosition.BEFOREEND);
+  render(listItem, pointComponent, RenderPosition.BEFOREEND);
 };
 
 const renderList = (container, arrPoints) => {
   const listComponent = new ListView();
 
-  if (arrPoints.length !== 0) {
-    render(eventsElement, new SortView().getElement(), RenderPosition.BEFOREEND);
-    render(container, listComponent.getElement(), RenderPosition.BEFOREEND);
-    arrPoints.forEach((point) => {
-      renderPoint(listComponent.getElement(), point);
-    });
-  } else {
-    render(container, new ListEmptyView().getElement(), RenderPosition.BEFOREEND);
+  if (arrPoints.length === 0) {
+    render(container, new ListEmptyView(), RenderPosition.BEFOREEND);
+    return;
   }
+
+  render(eventsElement, new SortView(), RenderPosition.BEFOREEND);
+  render(container, listComponent, RenderPosition.BEFOREEND);
+  arrPoints.forEach((point) => {
+    renderPoint(listComponent, point);
+  });
 };
 
 renderList(eventsElement, points);

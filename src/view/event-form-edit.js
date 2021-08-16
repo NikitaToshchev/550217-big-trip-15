@@ -3,7 +3,7 @@ import { CITY_POINTS } from '../mock/mock-data.js';
 import { createEventFormOffersTemplate } from './event-form-offers.js';
 import { createEventFormDestinationTemplate } from './event-form-destination.js';
 import dayjs from 'dayjs';
-import { createElement } from '../utils.js';
+import AbstractView from './abstract.js';
 
 const createEventFormEditTemplate = (point) => {
   const { id, type, destination, basePrice, dateTo, dateFrom, offers } = point;
@@ -74,24 +74,37 @@ const createEventFormEditTemplate = (point) => {
 </form>`;
 };
 
-export default class EventFormEdit {
+export default class EventFormEdit extends AbstractView {
   constructor(point) {
-    this._element = null;
+    super();
     this._point = point;
+
+    this._rollupBtnClickHandler = this._rollupBtnClickHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+
   }
 
   getTemplate() {
     return createEventFormEditTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _rollupBtnClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.rollupBtnClick();
   }
 
-  removeElement() {
-    this._element = null;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  }
+
+  setRollupBtnClickHandler(callback) {
+    this._callback.rollupBtnClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollupBtnClickHandler);
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().addEventListener('submit', this._formSubmitHandler);
   }
 }
