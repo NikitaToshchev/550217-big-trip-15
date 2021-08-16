@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { getDurationTime } from '../mock/date.js';
 import { createPointOffersListTemplate } from './point-offers.js';
-import { createElement } from '../utils.js';
+import AbstractView from './abstract.js';
 
 const createPointTemplate = (point) => {
   const { type, destination, basePrice, dateTo, dateFrom, isFavorite, offers } = point;
@@ -48,24 +48,25 @@ const createPointTemplate = (point) => {
     </div>`;
 };
 
-export default class Point {
+export default class Point extends AbstractView {
   constructor(point) {
-    this._element = null;
+    super();
     this._point = point;
+
+    this._rollupBtnClickHandler = this._rollupBtnClickHandler.bind(this);
   }
 
   getTemplate() {
     return createPointTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _rollupBtnClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.rollupBtnClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setRollupBtnClickHandler(callback) {
+    this._callback.rollupBtnClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollupBtnClickHandler);
   }
 }

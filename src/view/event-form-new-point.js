@@ -3,7 +3,7 @@ import { CITY_POINTS } from '../mock/mock-data.js';
 import { createEventFormOffersTemplate } from './event-form-offers.js';
 import { createEventFormDestinationTemplate } from './event-form-destination.js';
 import dayjs from 'dayjs';
-import { createElement } from '../utils.js';
+import AbstractView from './abstract.js';
 
 export const createEventFormNewPointTemplate = (point) => {
   const { id, type, destination, basePrice, dateTo, dateFrom, offers } = point;
@@ -71,24 +71,13 @@ export const createEventFormNewPointTemplate = (point) => {
 </form>`;
 };
 
-export default class EventFormNewPoint {
+export default class EventFormNewPoint extends AbstractView {
   constructor(point) {
-    this._element = null;
+    super();
     this._point = point;
   }
 
   getTemplate() {
     return createEventFormNewPointTemplate(this._point);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

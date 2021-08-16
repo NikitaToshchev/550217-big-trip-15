@@ -1,4 +1,4 @@
-import { getRandomNum, getRandomArrElement } from '../utils.js';
+import { getRandomNum, getRandomArrElement } from '../utils/common.js';
 import { POINT_TYPES } from '../const.js';
 import { generateDestination } from '../mock/destination.js';
 import { generateDate } from './date.js';
