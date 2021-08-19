@@ -24,12 +24,8 @@ const navigationElement = document.querySelector('.trip-controls__navigation');
 const eventsElement = document.querySelector('.trip-events');
 const filtersElement = document.querySelector('.trip-controls__filters');
 const mainElement = document.querySelector('.trip-main');
-const infoComponent = new InfoView();
 
 render(navigationElement, new MenuView(), RenderPosition.BEFOREEND);
-render(mainElement, infoComponent, RenderPosition.AFTERBEGIN);
-render(infoComponent, new TotalCostView(), RenderPosition.BEFOREEND);
-render(infoComponent, new InfoMainView(), RenderPosition.AFTERBEGIN);
 render(filtersElement, new FilterView(), RenderPosition.BEFOREEND);
 
 const renderPoint = (listElement, point) => {
@@ -79,6 +75,11 @@ const renderList = (container, arrPoints) => {
     return;
   }
 
+  const infoComponent = new InfoView();
+
+  render(mainElement, infoComponent, RenderPosition.AFTERBEGIN);
+  render(infoComponent, new TotalCostView(points), RenderPosition.BEFOREEND);
+  render(infoComponent, new InfoMainView(points), RenderPosition.AFTERBEGIN);
   render(eventsElement, new SortView(), RenderPosition.BEFOREEND);
   render(container, listComponent, RenderPosition.BEFOREEND);
   arrPoints.forEach((point) => {

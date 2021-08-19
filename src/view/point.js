@@ -52,7 +52,6 @@ export default class Point extends AbstractView {
   constructor(point) {
     super();
     this._point = point;
-
     this._rollupBtnClickHandler = this._rollupBtnClickHandler.bind(this);
   }
 
