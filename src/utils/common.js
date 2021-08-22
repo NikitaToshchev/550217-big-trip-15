@@ -24,3 +24,6 @@ export const getRandomArray = (arr) => {
 };
 
 export const getRandomArrElement = (arr) => arr.length ? arr[getRandomNum(0, arr.length - 1)] : null;
+
+
+export const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
