@@ -3,6 +3,7 @@ import { POINT_TYPES } from '../const.js';
 import { generateDestination } from '../mock/destination.js';
 import { generateDate } from './date.js';
 import { OffersByType } from './mock-data.js';
+import { nanoid } from 'nanoid';
 import dayjs from 'dayjs';
 
 export const generatePoint = () => {
@@ -11,7 +12,7 @@ export const generatePoint = () => {
   const dateTo = dayjs(dateFrom).add(getRandomNum(100, 2000), 'minute').toDate();
 
   return {
-    id: getRandomNum(1, 10000) + Date.now(),
+    id: nanoid(),
     type,
     destination: generateDestination(),
     dateFrom,
