@@ -31,6 +31,7 @@ export default class Point {
 
     const prevPointComponent = this._pointComponent;
     const prevEventFormEditComponent = this._eventFormEditComponent;
+    const prevListItemComponent = this._listItemComponent;
 
     this._pointComponent = new PointView(point);
     this._eventFormEditComponent = new EventFormEditView(point);
@@ -58,11 +59,13 @@ export default class Point {
 
     remove(prevPointComponent);
     remove(prevEventFormEditComponent);
+    remove(prevListItemComponent);
   }
 
   destroy() {
     remove(this._pointComponent);
     remove(this._eventFormEditComponent);
+    remove(this._listItemComponent);
   }
 
   _replacePointToForm() {

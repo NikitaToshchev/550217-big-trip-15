@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { getRandomNum } from '../utils/common.js';
+import { getRandomNum } from './common.js';
 
 export const generateDate = () => {
   const maxDaysGap = 10;

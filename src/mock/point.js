@@ -1,7 +1,7 @@
 import { getRandomNum, getRandomArrElement } from '../utils/common.js';
 import { POINT_TYPES } from '../const.js';
 import { generateDestination } from '../mock/destination.js';
-import { generateDate } from './date.js';
+import { generateDate } from '../utils/date.js';
 import { OffersByType } from './mock-data.js';
 import { nanoid } from 'nanoid';
 import dayjs from 'dayjs';

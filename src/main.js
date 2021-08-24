@@ -9,8 +9,10 @@ import MenuView from './view/menu.js';
 import FilterView from './view/filter.js';
 import TripPresenter from './presenter/trip.js';
 
-const POINT_COUNT = 20;
+const POINT_COUNT = 4;
+
 const points = new Array(POINT_COUNT).fill().map(generatePoint);
+points.sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
 
 const mainElement = document.querySelector('.trip-main');
 const navigationElement = document.querySelector('.trip-controls__navigation');
