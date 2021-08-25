@@ -1,4 +1,4 @@
-import { RenderPosition, render } from '../utils/render.js';
+import { RenderPosition, render, remove } from '../utils/render.js';
 import { sortPrice, sortTimeDuration, updateItem } from '../utils/common.js';
 
 import InfoView from '../view/info.js';
@@ -38,7 +38,7 @@ export default class Trip {
   }
 
   _renderSort() {
-    render(this._tripContainer, this._sortComponent, RenderPosition.BEFOREEND);
+    render(this._tripContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
@@ -126,6 +126,8 @@ export default class Trip {
     this._sortPoints(sortType);
     this._clearList();
     this._renderPoints();
+    remove(this._sortComponent);
+    this._sortComponent = new SortView(sortType);
+    this._renderSort();
   }
 }
-

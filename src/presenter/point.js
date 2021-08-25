@@ -42,9 +42,8 @@ export default class Point {
     this._eventFormEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
-    render(this._listItemComponent, this._pointComponent, RenderPosition.BEFOREEND);
-
     if (prevPointComponent === null || prevEventFormEditComponent === null) {
+      render(this._listItemComponent, this._pointComponent, RenderPosition.BEFOREEND);
       render(this._pointListContainer, this._listItemComponent, RenderPosition.BEFOREEND);
       return;
     }

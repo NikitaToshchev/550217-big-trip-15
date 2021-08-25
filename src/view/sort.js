@@ -23,20 +23,9 @@ export default class Sort extends AbstractView {
   }
 
   _sortTypeChangeHandler(evt) {
-    // так работает сортировка, но не работает checked
     if (evt.target.tagName !== 'INPUT') {
       return;
     }
-
-    // так работает checked, но не работает сортировка
-    // if (!evt.target.classList.contains('.trip-sort__input')) {
-    //   return;
-    // }
-
-    // так тоже работает checked
-    // if (evt.target.tagName !== 'DIV') {
-    //   return;
-    // }
 
     evt.preventDefault();
     this._callback.sortTypeChange(evt.target.dataset.sortType);
