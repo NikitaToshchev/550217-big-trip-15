@@ -75,6 +75,7 @@ export default class Trip {
   _clearList() {
     this._pointPresenter.forEach((presenter) => presenter.destroy());
     this._pointPresenter.clear();
+    remove(this._sortComponent);
   }
 
   _sortPoints(sortType) {
@@ -126,7 +127,6 @@ export default class Trip {
     this._sortPoints(sortType);
     this._clearList();
     this._renderPoints();
-    remove(this._sortComponent);
     this._sortComponent = new SortView(sortType);
     this._renderSort();
   }
