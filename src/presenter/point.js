@@ -42,7 +42,7 @@ export default class Point {
     this._eventFormEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
-    if (prevPointComponent === null || prevEventFormEditComponent === null) {
+    if (prevPointComponent === null || prevEventFormEditComponent === null || prevListItemComponent === null) {
       render(this._listItemComponent, this._pointComponent, RenderPosition.BEFOREEND);
       render(this._pointListContainer, this._listItemComponent, RenderPosition.BEFOREEND);
       return;
@@ -58,7 +58,7 @@ export default class Point {
 
     remove(prevPointComponent);
     remove(prevEventFormEditComponent);
-    remove(prevListItemComponent);
+    this._listItemComponent = prevListItemComponent;
   }
 
   destroy() {
