@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { getDurationTime } from '../mock/date.js';
+import { getDurationTime } from '../utils/date.js';
 import { createPointOffersListTemplate } from './point-offers.js';
 import AbstractView from './abstract.js';
 

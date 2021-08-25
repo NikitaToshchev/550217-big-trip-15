@@ -14,10 +14,11 @@ export default class Point {
     this._pointListContainer = pointListContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
+    this._mode = Mode.DEFAULT;
 
     this._pointComponent = null;
     this._editFormComponent = null;
-    this._mode = Mode.DEFAULT;
+    this._listItemComponent = new ListItemView();
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleRollupBtnClick = this._handleRollupBtnClick.bind(this);
@@ -34,17 +35,15 @@ export default class Point {
 
     this._pointComponent = new PointView(point);
     this._eventFormEditComponent = new EventFormEditView(point);
-    this._listItemComponent = new ListItemView();
 
     this._pointComponent.setRollupBtnClickHandler(this._handleRollupBtnClick);
     this._eventFormEditComponent.setRollupBtnClickHandler(this._handleRollupBtnFormClick);
     this._eventFormEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
-    render(this._listItemComponent, this._pointComponent, RenderPosition.BEFOREEND);
-
     if (prevPointComponent === null || prevEventFormEditComponent === null) {
       render(this._pointListContainer, this._listItemComponent, RenderPosition.BEFOREEND);
+      render(this._listItemComponent, this._pointComponent, RenderPosition.BEFOREEND);
       return;
     }
 
@@ -63,6 +62,7 @@ export default class Point {
   destroy() {
     remove(this._pointComponent);
     remove(this._eventFormEditComponent);
+    remove(this._listItemComponent);
   }
 
   _replacePointToForm() {
