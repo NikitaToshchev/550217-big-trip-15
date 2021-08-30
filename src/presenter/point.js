@@ -87,11 +87,7 @@ export default class Point {
   _escKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      //////////////////////////////////////////////s
-      // сброс изменений если пользователь нажал выход из формы то есть не сохранять редактирование а вернуть как было
       this._eventFormEditComponent.reset(this._point);
-      //////////////////////////////////////////////f
-
       this._replaceFormToPoint();
     }
   }
@@ -104,8 +100,9 @@ export default class Point {
     this._replaceFormToPoint();
   }
 
-  _handleFormSubmit() {
+  _handleFormSubmit(point) {
     this._replaceFormToPoint();
+    this._changeData(point);
   }
 
   _handleFavoriteClick() {

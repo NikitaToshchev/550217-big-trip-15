@@ -2,7 +2,6 @@ import AbstractView from './abstract.js';
 import { SortType } from '../const.js';
 
 const createSortTemplate = (currentSortType = SortType.DAY.name) => (
-
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
 
   ${Object.values(SortType).map((type) => (`<div class="trip-sort__item  trip-sort__item--${type.name}">

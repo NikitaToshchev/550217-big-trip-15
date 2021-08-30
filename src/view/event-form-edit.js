@@ -1,27 +1,19 @@
 import { POINT_TYPES } from '../const.js';
-import { CITY_POINTS } from '../mock/mock-data.js';
+import { CITY_POINTS, OffersByType } from '../mock/mock-data.js';
+import { generateDestination } from '../mock/destination.js';
 import { createEventFormOffersTemplate } from './event-form-offers.js';
 import { createEventFormDestinationTemplate } from './event-form-destination.js';
 import dayjs from 'dayjs';
 import SmartView from './smart.js';
 
-// при смене типа точки менетяются офера, при смене города меняются описание и фотографии если есть но их как флаг точно не надо передавать они ни а что не влияют это данные только для показа как я понимаю
-// лучше убрать логику в sort из шаблона, но в демке есть логка в шаблоне
-// передавать данные о точке и флаг если это форма редактирования или нет, чтобы передавать разные кнопки в форме и другие различия если есть
-// const createEventFormEditTemplate = (data ,isFormEdit) => {
-// }
-
-const createEventFormEditTemplate = (point) => {
-  const { id, type, destination, basePrice, dateTo, dateFrom, offers } = point;
-  const offersByType = offers[type]; // как-то по другому нужно ли это вообще
-  ///////////////////////////////////////// s
-  // const { id, type, destination, basePrice, dateTo, dateFrom, offers } = data;
-  //////////////////////////////////////// f
+const createEventFormEditTemplate = (data) => {
+  const { id, type, destination, basePrice, dateTo, dateFrom, offers } = data;
   const valueStartTime = dayjs(dateFrom).format('YY/MM/DD HH:MM');
   const valueFinishTime = dayjs(dateTo).format('YY/MM/DD HH:MM');
 
-  const IsOffersElement = offers.length !== 0 ? createEventFormOffersTemplate(point) : '';
-  const IsDestinationElement = Object.keys(destination).length !== 0 ? createEventFormDestinationTemplate(point) : '';
+
+  const IsOffersElement = offers.length !== 0 ? createEventFormOffersTemplate(data) : '';
+  const IsDestinationElement = Object.keys(destination).length !== 0 ? createEventFormDestinationTemplate(data) : '';
 
   return `<form class="event event--edit" action="#" method="post">
   <header class="event__header">
@@ -87,20 +79,16 @@ const createEventFormEditTemplate = (point) => {
 export default class EventFormEdit extends SmartView {
   constructor(point) {
     super();
-    this._point = point;
+    this._data = EventFormEdit.parsePointToData(point);
 
     this._rollupBtnClickHandler = this._rollupBtnClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    // вместо this._point = point; передавать строку ниже
-    // this._data = EventFormEdit.parseTaskToData(point);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._setInnerHandelers();
   }
 
   getTemplate() {
-    return createEventFormEditTemplate(this._point);
-    // вместо точки передаем дату
-    // return createEventFormEditTemplate(this._data);
+    return createEventFormEditTemplate(this._data);
   }
 
   restoreHandlers() {
@@ -114,7 +102,6 @@ export default class EventFormEdit extends SmartView {
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._cityChangeHandler);
   }
 
-  // парсит задачу которую передал презентер в reset
   reset(point) {
     this.updateData(EventFormEdit.parsePointToData(point));
   }
@@ -126,8 +113,6 @@ export default class EventFormEdit extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
-    //вместо колбека выше передаем для сохранения иноформации
     this._callback.formSubmit(EventFormEdit.parseDataToPoint(this._data));
   }
 
@@ -135,20 +120,19 @@ export default class EventFormEdit extends SmartView {
     evt.preventDefault();
     this.updateData({
       type: evt.target.value,
-      offers: offersByType[evt.target.value],
+      offers: OffersByType[evt.target.value],
     });
   }
 
   _cityChangeHandler(evt) {
     evt.preventDefault();
-    this.updateData(
-      {
-        destination: {
-          // description:,
-          name: evt.target.value,
-          // pictures: ,
-        },
-      });
+    this.updateData({
+      destination: {
+        description: generateDestination().description,
+        name: evt.target.value,
+        pictures: generateDestination().pictures,
+      },
+    });
   }
 
   setRollupBtnClickHandler(callback) {
@@ -163,12 +147,9 @@ export default class EventFormEdit extends SmartView {
   // Метод задача которого взять инофрмацию и сделать ее снимок превратив в состояние
 
   static parsePointToData(point) {
-    return Object.assign(
-      {},
-      point,
-    );
+    return Object.assign({}, point);
   }
-  // метод используется чтобы сохранить состояние в инофрмацию
+  // Метод используется чтобы сохранить состояние в инофрмацию
 
   static parseDataToPoint(data) {
     data = Object.assign({}, data);
