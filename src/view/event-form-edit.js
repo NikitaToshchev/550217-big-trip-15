@@ -1,17 +1,19 @@
 import { POINT_TYPES } from '../const.js';
-import { CITY_POINTS } from '../mock/mock-data.js';
+import { CITY_POINTS, OffersByType } from '../mock/mock-data.js';
+import { generateDestination } from '../mock/destination.js';
 import { createEventFormOffersTemplate } from './event-form-offers.js';
 import { createEventFormDestinationTemplate } from './event-form-destination.js';
 import dayjs from 'dayjs';
-import AbstractView from './abstract.js';
+import SmartView from './smart.js';
 
-const createEventFormEditTemplate = (point) => {
-  const { id, type, destination, basePrice, dateTo, dateFrom, offers } = point;
+const createEventFormEditTemplate = (data) => {
+  const { id, type, destination, basePrice, dateTo, dateFrom, offers } = data;
   const valueStartTime = dayjs(dateFrom).format('YY/MM/DD HH:MM');
   const valueFinishTime = dayjs(dateTo).format('YY/MM/DD HH:MM');
 
-  const offersElement = offers.length !== 0 ? createEventFormOffersTemplate(point) : '';
-  const destinationElement = Object.keys(destination).length !== 0 ? createEventFormDestinationTemplate(point) : '';
+
+  const IsOffersElement = offers.length !== 0 ? createEventFormOffersTemplate(data) : '';
+  const IsDestinationElement = Object.keys(destination).length !== 0 ? createEventFormDestinationTemplate(data) : '';
 
   return `<form class="event event--edit" action="#" method="post">
   <header class="event__header">
@@ -68,24 +70,40 @@ const createEventFormEditTemplate = (point) => {
     </button>
   </header>
   <section class="event__details">
-  ${offersElement}
-  ${destinationElement}
+  ${IsOffersElement}
+  ${IsDestinationElement}
   </section>
 </form>`;
 };
 
-export default class EventFormEdit extends AbstractView {
+export default class EventFormEdit extends SmartView {
   constructor(point) {
     super();
-    this._point = point;
+    this._data = EventFormEdit.parsePointToData(point);
 
     this._rollupBtnClickHandler = this._rollupBtnClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-
+    this._typeChangeHandler = this._typeChangeHandler.bind(this);
+    this._setInnerHandelers();
   }
 
   getTemplate() {
-    return createEventFormEditTemplate(this._point);
+    return createEventFormEditTemplate(this._data);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandelers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setRollupBtnClickHandler(this._callback.rollupBtnClick);
+  }
+
+  _setInnerHandelers() {
+    this.getElement().querySelector('.event__type-group').addEventListener('change', this._typeChangeHandler);
+    this.getElement().querySelector('.event__input--destination').addEventListener('change', this._cityChangeHandler);
+  }
+
+  reset(point) {
+    this.updateData(EventFormEdit.parsePointToData(point));
   }
 
   _rollupBtnClickHandler(evt) {
@@ -95,7 +113,26 @@ export default class EventFormEdit extends AbstractView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(EventFormEdit.parseDataToPoint(this._data));
+  }
+
+  _typeChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      type: evt.target.value,
+      offers: OffersByType[evt.target.value],
+    });
+  }
+
+  _cityChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      destination: {
+        description: generateDestination().description,
+        name: evt.target.value,
+        pictures: generateDestination().pictures,
+      },
+    });
   }
 
   setRollupBtnClickHandler(callback) {
@@ -106,5 +143,16 @@ export default class EventFormEdit extends AbstractView {
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().addEventListener('submit', this._formSubmitHandler);
+  }
+  // Метод задача которого взять инофрмацию и сделать ее снимок превратив в состояние
+
+  static parsePointToData(point) {
+    return Object.assign({}, point);
+  }
+  // Метод используется чтобы сохранить состояние в инофрмацию
+
+  static parseDataToPoint(data) {
+    data = Object.assign({}, data);
+    return data;
   }
 }
