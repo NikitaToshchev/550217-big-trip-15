@@ -1,7 +1,7 @@
 import { RenderPosition, render, replace, remove } from '../utils/render.js';
 
 import PointView from '../view/point.js';
-import EventFormEditView from '../view/event-form-edit.js';
+import EventFormEditView from '../view/event-form/event-form-edit.js';
 import ListItemView from '../view/list-item.js';
 
 const Mode = {
@@ -97,6 +97,7 @@ export default class Point {
   }
 
   _handleRollupBtnFormClick() {
+    this._eventFormEditComponent.reset(this._point);
     this._replaceFormToPoint();
   }
 

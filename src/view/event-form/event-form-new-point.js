@@ -1,9 +1,9 @@
-import { POINT_TYPES } from '../const.js';
-import { CITY_POINTS } from '../mock/mock-data.js';
+import { POINT_TYPES } from '../../const.js';
+import { CITY_POINTS } from '../../mock/mock-data.js';
 import { createEventFormOffersTemplate } from './event-form-offers.js';
 import { createEventFormDestinationTemplate } from './event-form-destination.js';
 import dayjs from 'dayjs';
-import AbstractView from './abstract.js';
+import AbstractView from '../abstract.js';
 
 export const createEventFormNewPointTemplate = (point) => {
   const { id, type, destination, basePrice, dateTo, dateFrom, offers } = point;
