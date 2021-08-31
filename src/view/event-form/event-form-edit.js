@@ -176,7 +176,7 @@ export default class EventFormEdit extends SmartView {
     this._datepickerStart = flatpickr(
       this.getElement().querySelector('input[name="event-start-time"]'),
       {
-        dateFormat: 'd/m/y H:i',
+        dateFormat: 'y/m/d H:i',
         enableTime: true,
         'time_24hr': true,
         onChange: this._startTimeHandler,
@@ -186,7 +186,7 @@ export default class EventFormEdit extends SmartView {
       this._datepickerEnd = flatpickr(
         this.getElement().querySelector('input[name="event-end-time"]'),
         {
-          dateFormat: 'd/m/y H:i',
+          dateFormat: 'y/m/d H:i',
           enableTime: true,
           minDate: this._datepickerStart.input.value,
           'time_24hr': true,
