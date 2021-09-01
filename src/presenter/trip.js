@@ -24,20 +24,17 @@ export default class Trip {
     this._currentSortType = SortType.DAY.name;
     this._infoMainComponent = new InfoMainView();
     this._totalCostComponent = new TotalCostView();
-    this._sortComponent = new SortView(this._currentSortType);
 
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._sortComponent = null;
     // this._tasksModel.addObserver(this._handleModelEvent);
   }
 
   init() {
-    // пока сделал так чтобы работало, возможно куда-то нужно будет перенести
-    this._infoMainComponent = new InfoMainView(this._getPoints());
-    this._totalCostComponent = new TotalCostView(this._getPoints());
     this._renderTripList();
   }
 
@@ -52,6 +49,10 @@ export default class Trip {
   }
 
   _renderSort() {
+    if (this._sortComponent !== null) {
+      this._sortComponent = null;
+    }
+    this._sortComponent = new SortView(this._currentSortType);
     render(this._tripContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
@@ -75,10 +76,12 @@ export default class Trip {
   }
 
   _renderInfoMain() {
+    this._infoMainComponent = new InfoMainView(this._getPoints());
     render(this._infoComponent, this._infoMainComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderTotalCost() {
+    this._totalCostComponent = new TotalCostView(this._getPoints());
     render(this._infoComponent, this._totalCostComponent, RenderPosition.BEFOREEND);
   }
 
@@ -86,10 +89,18 @@ export default class Trip {
     render(this._tripContainer, this._listComponent, RenderPosition.BEFOREEND);
   }
 
-  _clearList() {
+  _clearList({ resetSortType = false } = {}) {
     this._pointPresenter.forEach((presenter) => presenter.destroy());
     this._pointPresenter.clear();
     remove(this._sortComponent);
+
+    if (this._listEmptyComponent) {
+      remove(this._listEmptyComponent);
+    }
+
+    if (resetSortType) {
+      this._currentSortType = SortType.DEFAULT;
+    }
   }
 
   _renderTripList() {
@@ -120,8 +131,8 @@ export default class Trip {
 
     this._currentSortType = sortType;
     this._clearList();
-    this._renderPoints();
     this._sortComponent = new SortView(sortType);
+    this._renderPoints();
     this._renderSort();
   }
 
@@ -144,10 +155,6 @@ export default class Trip {
   }
 
   _handleModelEvent(updateType, data) {
-    // В зависимости от типа изменений решаем, что делать:
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список (например, когда задача ушла в архив)
-    // - обновить всю доску (например, при переключении фильтра)
     switch (updateType) {
       case UpdateType.PATCH:
         // - обновить часть списка (например, когда поменялось описание)
@@ -155,9 +162,13 @@ export default class Trip {
         break;
       case UpdateType.MINOR:
         // - обновить список (например, когда задача ушла в архив)
+        this._clearList();
+        this._renderTripList();
         break;
       case UpdateType.MAJOR:
         // - обновить всю доску (например, при переключении фильтра)
+        this._clearList({ resetSortType: true });
+        this._renderTripList();
         break;
     }
   }
