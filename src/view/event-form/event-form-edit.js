@@ -90,6 +90,7 @@ export default class EventFormEdit extends SmartView {
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._cityChangeHandler = this._cityChangeHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
 
     this._startTimeHandler = this._startTimeHandler.bind(this);
     this._endTimeHandler = this._endTimeHandler.bind(this);
@@ -149,6 +150,11 @@ export default class EventFormEdit extends SmartView {
         pictures: generateDestination().pictures,
       },
     });
+  }
+
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(EventFormEdit.parseDataToPoint(this._data));
   }
 
   _startTimeHandler([userDate]) {
@@ -214,6 +220,11 @@ export default class EventFormEdit extends SmartView {
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().addEventListener('submit', this._formSubmitHandler);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._formDeleteClickHandler);
   }
   // Метод задача которого взять инофрмацию и сделать ее снимок превратив в состояние
 

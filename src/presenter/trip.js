@@ -35,7 +35,7 @@ export default class Trip {
   }
 
   init() {
-    this._renderTripList();
+    this._renderBoard();
   }
 
   _getPoints() {
@@ -52,9 +52,10 @@ export default class Trip {
     if (this._sortComponent !== null) {
       this._sortComponent = null;
     }
+
     this._sortComponent = new SortView(this._currentSortType);
-    render(this._tripContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+    render(this._tripContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderListEmpty() {
@@ -89,21 +90,18 @@ export default class Trip {
     render(this._tripContainer, this._listComponent, RenderPosition.BEFOREEND);
   }
 
-  _clearList({ resetSortType = false } = {}) {
+  _clearBoard({ resetSortType = false } = {}) {
     this._pointPresenter.forEach((presenter) => presenter.destroy());
     this._pointPresenter.clear();
     remove(this._sortComponent);
-
-    if (this._listEmptyComponent) {
-      remove(this._listEmptyComponent);
-    }
+    remove(this._listEmptyComponent);
 
     if (resetSortType) {
       this._currentSortType = SortType.DEFAULT;
     }
   }
 
-  _renderTripList() {
+  _renderBoard() {
     if (this._pointsModel.getPoints().length === 0) {
       this._renderListEmpty();
       return;
@@ -130,7 +128,7 @@ export default class Trip {
     }
 
     this._currentSortType = sortType;
-    this._clearList();
+    this._clearBoard();
     this._sortComponent = new SortView(sortType);
     this._renderPoints();
     this._renderSort();
@@ -162,13 +160,13 @@ export default class Trip {
         break;
       case UpdateType.MINOR:
         // - обновить список (например, когда задача ушла в архив)
-        this._clearList();
-        this._renderTripList();
+        this._clearBoard();
+        this._renderBoard();
         break;
       case UpdateType.MAJOR:
         // - обновить всю доску (например, при переключении фильтра)
-        this._clearList({ resetSortType: true });
-        this._renderTripList();
+        this._clearBoard({ resetSortType: true });
+        this._renderBoard();
         break;
     }
   }
