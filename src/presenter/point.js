@@ -3,11 +3,7 @@ import { RenderPosition, render, replace, remove } from '../utils/render.js';
 import PointView from '../view/point.js';
 import EventFormEditView from '../view/event-form/event-form-edit.js';
 import ListItemView from '../view/list-item.js';
-
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
+import { Mode, UserAction, UpdateType } from '../const.js';
 
 export default class Point {
   constructor(pointListContainer, changeData, changeMode) {
@@ -102,12 +98,18 @@ export default class Point {
   }
 
   _handleFormSubmit(point) {
+    this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
     this._replaceFormToPoint();
-    this._changeData(point);
   }
 
   _handleFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._point,

@@ -8,7 +8,8 @@ import SortView from '../view/sort.js';
 import ListView from '../view/list.js';
 import ListEmptyView from '../view/list-empty.js';
 import PointPresenter from './point.js';
-import { SortType } from '../const.js';
+import { SortType, UserAction, UpdateType } from '../const.js';
+
 
 export default class Trip {
   constructor(tripContainer, infoContainer, pointsModel) {
@@ -25,9 +26,12 @@ export default class Trip {
     this._totalCostComponent = new TotalCostView();
     this._sortComponent = new SortView(this._currentSortType);
 
-    this._handleDataChange = this._handleDataChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+    // this._tasksModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -57,7 +61,7 @@ export default class Trip {
   }
 
   _renderPoint(point) {
-    const pointPresenter = new PointPresenter(this._listComponent, this._handleDataChange, this._handleModeChange);
+    const pointPresenter = new PointPresenter(this._listComponent, this._handleViewAction, this._handleModeChange);
     pointPresenter.init(point);
     this._pointPresenter.set(point.id, pointPresenter);
   }
@@ -105,10 +109,6 @@ export default class Trip {
     this._renderTotalCost();
   }
 
-  _handleDataChange(updatePoint) {
-    this._pointPresenter.get(updatePoint.id).init(updatePoint);
-  }
-
   _handleModeChange() {
     this._pointPresenter.forEach((presenter) => presenter.resetView());
   }
@@ -123,5 +123,42 @@ export default class Trip {
     this._renderPoints();
     this._sortComponent = new SortView(sortType);
     this._renderSort();
+  }
+
+  _handleViewAction(actionType, updateType, update) {
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+    switch (actionType) {
+      case UserAction.UPDATE_POINT:
+        this._pointsModel.updatePoint(updateType, update);
+        break;
+      case UserAction.ADD_POINT:
+        this._pointsModel.addPoint(updateType, update);
+        break;
+      case UserAction.DELETE_POINT:
+        this._pointsModel.deletePoint(updateType, update);
+        break;
+    }
+  }
+
+  _handleModelEvent(updateType, data) {
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
+    switch (updateType) {
+      case UpdateType.PATCH:
+        // - обновить часть списка (например, когда поменялось описание)
+        this._pointPresenter.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        // - обновить список (например, когда задача ушла в архив)
+        break;
+      case UpdateType.MAJOR:
+        // - обновить всю доску (например, при переключении фильтра)
+        break;
+    }
   }
 }
