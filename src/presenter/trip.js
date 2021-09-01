@@ -40,15 +40,14 @@ export default class Trip {
   _getPoints() {
     switch (this._currentSortType) {
       case SortType.TIME.name:
-        return this._pointsModel.getPoints.slice().sort(sortTimeDuration);
+        return this._pointsModel.getPoints().slice().sort(sortTimeDuration);
       case SortType.PRICE.name:
-        return this._pointsModel.getPoints.slice().sort(sortPrice);
+        return this._pointsModel.getPoints().slice().sort(sortPrice);
     }
     return this._pointsModel.getPoints().sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
   }
 
   _renderSort() {
-    this._sortComponent = new SortView(this._currentSortType);
     render(this._tripContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
