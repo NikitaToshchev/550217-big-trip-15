@@ -13,7 +13,6 @@ import PointsModel from './model/points.js';
 const POINT_COUNT = 4;
 
 const points = new Array(POINT_COUNT).fill().map(generatePoint);
-points.sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
 
 const mainElement = document.querySelector('.trip-main');
 const navigationElement = document.querySelector('.trip-controls__navigation');
@@ -23,10 +22,8 @@ const eventsElement = document.querySelector('.trip-events');
 render(navigationElement, new MenuView(), RenderPosition.BEFOREEND);
 render(filtersElement, new FilterView(), RenderPosition.BEFOREEND);
 
-/// n
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
 
 const tripPresenter = new TripPresenter(eventsElement, mainElement, pointsModel);
-tripPresenter.init(points);
-
+tripPresenter.init();
