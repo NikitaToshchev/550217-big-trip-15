@@ -11,9 +11,11 @@ import PointPresenter from './point.js';
 import { SortType } from '../const.js';
 
 export default class Trip {
-  constructor(tripContainer, infoContainer) {
+  constructor(tripContainer, infoContainer, pointsModel) {
     this._tripContainer = tripContainer;
     this._infoContainer = infoContainer;
+    /// n
+    this._pointsModel = pointsModel;
 
     this._listComponent = new ListView();
     this._listEmptyComponent = new ListEmptyView();
@@ -35,6 +37,11 @@ export default class Trip {
     this._sortComponent = new SortView(this._currentSortType);
 
     this._renderTripList();
+  }
+  /// n
+
+  _getPoints() {
+    return this._pointsModel.getPoints();
   }
 
   _renderSort() {

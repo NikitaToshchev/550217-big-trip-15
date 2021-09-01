@@ -8,6 +8,7 @@ import { RenderPosition, render } from './utils/render.js';
 import MenuView from './view/menu.js';
 import FilterView from './view/filter.js';
 import TripPresenter from './presenter/trip.js';
+import PointsModel from './model/points.js';
 
 const POINT_COUNT = 4;
 
@@ -22,5 +23,10 @@ const eventsElement = document.querySelector('.trip-events');
 render(navigationElement, new MenuView(), RenderPosition.BEFOREEND);
 render(filtersElement, new FilterView(), RenderPosition.BEFOREEND);
 
-const tripPresenter = new TripPresenter(eventsElement, mainElement);
+/// n
+const pointsModel = new PointsModel();
+pointsModel.setPoints(points);
+
+const tripPresenter = new TripPresenter(eventsElement, mainElement, pointsModel);
 tripPresenter.init(points);
+
