@@ -8,20 +8,22 @@ import SortView from '../view/sort.js';
 import ListView from '../view/list.js';
 import ListEmptyView from '../view/list-empty.js';
 import PointPresenter from './point.js';
-import { SortType, UserAction, UpdateType } from '../const.js';
-
+import { SortType, UserAction, UpdateType, FilterType } from '../const.js';
+import { filter } from '../utils/filter.js';
 
 export default class Trip {
-  constructor(tripContainer, infoContainer, pointsModel) {
+  constructor(tripContainer, infoContainer, filterModel, pointsModel) {
     this._tripContainer = tripContainer;
     this._infoContainer = infoContainer;
     this._pointsModel = pointsModel;
+    this._filterModel = filterModel;
 
     this._listComponent = new ListView();
     this._listEmptyComponent = new ListEmptyView();
     this._infoComponent = new InfoView();
     this._pointPresenter = new Map();
     this._currentSortType = SortType.DAY.name;
+    this._filterType = FilterType.EVERYTHING;
     this._infoMainComponent = new InfoMainView();
     this._totalCostComponent = new TotalCostView();
 
@@ -31,7 +33,9 @@ export default class Trip {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._sortComponent = null;
-    // this._tasksModel.addObserver(this._handleModelEvent);
+    this._listEmptyComponent = null;
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -39,13 +43,17 @@ export default class Trip {
   }
 
   _getPoints() {
+    this._filterType = this._filterModel.getFilter();
+    const points = this._pointsModel.getPoints();
+    const filteredPoints = filter[this._filterType](points);
+
     switch (this._currentSortType) {
       case SortType.TIME.name:
-        return this._pointsModel.getPoints().slice().sort(sortTimeDuration);
+        return filteredPoints.sort(sortTimeDuration);
       case SortType.PRICE.name:
-        return this._pointsModel.getPoints().slice().sort(sortPrice);
+        return filteredPoints.sort(sortPrice);
     }
-    return this._pointsModel.getPoints().sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
+    return filteredPoints.sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
   }
 
   _renderSort() {
@@ -59,6 +67,11 @@ export default class Trip {
   }
 
   _renderListEmpty() {
+    if (this._listEmptyComponent !== null) {
+      this._listEmptyComponent = null;
+    }
+
+    this._listEmptyComponent = new ListEmptyView(this._filterType);
     render(this._tripContainer, this._listEmptyComponent, RenderPosition.BEFOREEND);
   }
 
@@ -94,15 +107,23 @@ export default class Trip {
     this._pointPresenter.forEach((presenter) => presenter.destroy());
     this._pointPresenter.clear();
     remove(this._sortComponent);
-    remove(this._listEmptyComponent);
+    remove(this._infoComponent);
+    remove(this._totalCostComponent);
 
     if (resetSortType) {
       this._currentSortType = SortType.DEFAULT;
     }
+    if (this._listEmptyComponent) {
+      remove(this._listEmptyComponent);
+    }
   }
 
   _renderBoard() {
-    if (this._pointsModel.getPoints().length === 0) {
+    this._filterType = this._filterModel.getFilter();
+    const points = this._pointsModel.getPoints();
+    const filteredPoints = filter[this._filterType](points);
+
+    if (filteredPoints.length === 0) {
       this._renderListEmpty();
       return;
     }
@@ -135,7 +156,6 @@ export default class Trip {
   }
 
   _handleViewAction(actionType, updateType, update) {
-    // Здесь будем вызывать обновление модели.
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
     // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
     // update - обновленные данные
@@ -155,16 +175,13 @@ export default class Trip {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
         this._pointPresenter.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        // - обновить список (например, когда задача ушла в архив)
         this._clearBoard();
         this._renderBoard();
         break;
       case UpdateType.MAJOR:
-        // - обновить всю доску (например, при переключении фильтра)
         this._clearBoard({ resetSortType: true });
         this._renderBoard();
         break;
