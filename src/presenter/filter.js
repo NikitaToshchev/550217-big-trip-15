@@ -3,20 +3,20 @@ import { RenderPosition, render, remove, replace } from '../utils/render.js';
 import { FilterType, UpdateType } from '../const.js';
 
 export default class FiltersPresenter {
-  constructor(filterContainer, filterModel, pointsModel) {
+  constructor(filterContainer, filterModel) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
-    this._pointsModel = pointsModel;
     this._filterComponent = null;
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
-    this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
+    const filters = this._getFilters();
     const prevFilterComponent = this._filterComponent;
-    this._filterComponent = new FilterView(this._filterModel.getFilter());
+    this._filterComponent = new FilterView(filters, this._filterModel.getFilter());
+
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {

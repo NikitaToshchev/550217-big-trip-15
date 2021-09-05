@@ -26,7 +26,7 @@ pointsModel.setPoints(points);
 
 const filtersElement = document.querySelector('.trip-controls__filters');
 const filterModel = new FilterModel();
-const filterPresenter = new FilterPresenter(filtersElement, filterModel, pointsModel);
+const filterPresenter = new FilterPresenter(filtersElement, filterModel);
 filterPresenter.init();
 
 const tripPresenter = new TripPresenter(eventsElement, mainElement, filterModel, pointsModel);
