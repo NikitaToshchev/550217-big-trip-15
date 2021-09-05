@@ -10,36 +10,48 @@ import ListEmptyView from '../view/list-empty.js';
 import PointPresenter from './point.js';
 import { SortType, UserAction, UpdateType, FilterType } from '../const.js';
 import { filter } from '../utils/filter.js';
+import NewPointPresenter from './new-point.js';
 
 export default class Trip {
   constructor(tripContainer, infoContainer, filterModel, pointsModel) {
     this._tripContainer = tripContainer;
     this._infoContainer = infoContainer;
+
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
 
     this._listComponent = new ListView();
-    this._listEmptyComponent = new ListEmptyView();
     this._infoComponent = new InfoView();
-    this._pointPresenter = new Map();
+    this._infoMainComponent = null;
+    this._totalCostComponent = null;
+    this._sortComponent = null;
+    this._listEmptyComponent = null;
+
     this._currentSortType = SortType.DAY.name;
     this._filterType = FilterType.EVERYTHING;
-    this._infoMainComponent = new InfoMainView();
-    this._totalCostComponent = new TotalCostView();
+    this._pointPresenter = new Map();
 
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
-    this._sortComponent = null;
-    this._listEmptyComponent = null;
+
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+
+    // не знаю зачем передаю поинтсмодел
+    this._newPointPresenter = new NewPointPresenter(this._listComponent, this._handleViewAction, this._pointsModel);
   }
 
   init() {
+    this._renderTripHeader();
     this._renderBoard();
+  }
+
+  createPoint() {
+    this._currentSortType = SortType.DAY.name;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._newPointPresenter.init();
   }
 
   _getPoints() {
@@ -104,14 +116,14 @@ export default class Trip {
   }
 
   _clearBoard({ resetSortType = false } = {}) {
+    this._newPointPresenter.destroy();
     this._pointPresenter.forEach((presenter) => presenter.destroy());
     this._pointPresenter.clear();
     remove(this._sortComponent);
     remove(this._infoComponent);
-    remove(this._totalCostComponent);
 
     if (resetSortType) {
-      this._currentSortType = SortType.DEFAULT;
+      this._currentSortType = SortType.DAY.name;
     }
     if (this._listEmptyComponent) {
       remove(this._listEmptyComponent);
@@ -127,7 +139,6 @@ export default class Trip {
       this._renderListEmpty();
       return;
     }
-    this._renderTripHeader();
     this._renderSort();
     this._renderList();
     this._renderPoints();
@@ -140,6 +151,7 @@ export default class Trip {
   }
 
   _handleModeChange() {
+    this._newPointPresenter.destroy();
     this._pointPresenter.forEach((presenter) => presenter.resetView());
   }
 
@@ -155,6 +167,8 @@ export default class Trip {
     this._renderSort();
   }
 
+  // Наблюдает за действиями пользователя
+  // Вызывает обновление модели
   _handleViewAction(actionType, updateType, update) {
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
     // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
@@ -172,6 +186,8 @@ export default class Trip {
     }
   }
 
+  // Наблюдает за действиями модели
+  // В зависимости от типа изменения решает, что делать
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
@@ -180,10 +196,14 @@ export default class Trip {
       case UpdateType.MINOR:
         this._clearBoard();
         this._renderBoard();
+        this._renderTripHeader();
+
         break;
+      // обновить всю доску (например, при переключении фильтра)
       case UpdateType.MAJOR:
         this._clearBoard({ resetSortType: true });
         this._renderBoard();
+        this._renderTripHeader();
         break;
     }
   }

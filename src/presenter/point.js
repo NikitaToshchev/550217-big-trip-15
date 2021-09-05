@@ -1,7 +1,6 @@
 import { RenderPosition, render, replace, remove } from '../utils/render.js';
-
 import PointView from '../view/point.js';
-import EventFormEditView from '../view/event-form/event-form-edit.js';
+import EventFormView from '../view/event-form/event-form.js';
 import ListItemView from '../view/list-item.js';
 import { Mode, UserAction, UpdateType } from '../const.js';
 
@@ -13,8 +12,9 @@ export default class Point {
     this._mode = Mode.DEFAULT;
 
     this._pointComponent = null;
-    this._editFormComponent = null;
+    this._eventFormComponent = null;
     this._listItemComponent = new ListItemView();
+    this._isEditForm = true;
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleRollupBtnClick = this._handleRollupBtnClick.bind(this);
@@ -28,16 +28,16 @@ export default class Point {
     this._point = point;
 
     const prevPointComponent = this._pointComponent;
-    const prevEventFormEditComponent = this._eventFormEditComponent;
+    const prevEventFormEditComponent = this._eventFormComponent;
 
     this._pointComponent = new PointView(point);
-    this._eventFormEditComponent = new EventFormEditView(point);
+    this._eventFormComponent = new EventFormView(point, this._isEditForm);
 
     this._pointComponent.setRollupBtnClickHandler(this._handleRollupBtnClick);
-    this._eventFormEditComponent.setRollupBtnClickHandler(this._handleRollupBtnFormClick);
-    this._eventFormEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._eventFormComponent.setRollupBtnClickHandler(this._handleRollupBtnFormClick);
+    this._eventFormComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._eventFormEditComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._eventFormComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevPointComponent === null || prevEventFormEditComponent === null) {
       render(this._pointListContainer, this._listItemComponent, RenderPosition.BEFOREEND);
@@ -50,7 +50,7 @@ export default class Point {
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._eventFormEditComponent, prevEventFormEditComponent);
+      replace(this._eventFormComponent, prevEventFormEditComponent);
     }
 
     remove(prevPointComponent);
@@ -59,19 +59,19 @@ export default class Point {
 
   destroy() {
     remove(this._pointComponent);
-    remove(this._eventFormEditComponent);
+    remove(this._eventFormComponent);
     remove(this._listItemComponent);
   }
 
   _replacePointToForm() {
-    replace(this._eventFormEditComponent, this._pointComponent);
+    replace(this._eventFormComponent, this._pointComponent);
     document.addEventListener('keydown', this._escKeyDownHandler);
     this._changeMode();
     this._mode = Mode.EDITING;
   }
 
   _replaceFormToPoint() {
-    replace(this._pointComponent, this._eventFormEditComponent);
+    replace(this._pointComponent, this._eventFormComponent);
     document.removeEventListener('keydown', this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
   }
@@ -85,7 +85,7 @@ export default class Point {
   _escKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      this._eventFormEditComponent.reset(this._point);
+      this._eventFormComponent.reset(this._point);
       this._replaceFormToPoint();
     }
   }
@@ -95,7 +95,7 @@ export default class Point {
   }
 
   _handleRollupBtnFormClick() {
-    this._eventFormEditComponent.reset(this._point);
+    this._eventFormComponent.reset(this._point);
     this._replaceFormToPoint();
   }
 

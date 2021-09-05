@@ -51,7 +51,7 @@ export const UserAction = {
 };
 
 export const UpdateType = {
-  PATCH: 'PATCH',
-  MINOR: 'MINOR',
-  MAJOR: 'MAJOR',
+  PATCH: 'PATCH', // точка маршрута
+  MINOR: 'MINOR', //добавление задачи в избранное
+  MAJOR: 'MAJOR', //перерисовка страницы, маршрут  и цена в меню, сортировка, фильтры
 };

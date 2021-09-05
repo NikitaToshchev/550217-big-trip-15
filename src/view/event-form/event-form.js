@@ -7,8 +7,9 @@ import dayjs from 'dayjs';
 import SmartView from '../smart.js';
 import flatpickr from 'flatpickr';
 import '../../../node_modules/flatpickr/dist/flatpickr.min.css';
+import { matchCity } from '../../utils/common.js';
 
-const createEventFormEditTemplate = (data) => {
+const createEventFormEditTemplate = (data, isEditForm) => {
   const { id, type, destination, basePrice, dateTo, dateFrom, offers } = data;
   const valueStartTime = dayjs(dateFrom).format('YY/MM/DD HH:MM');
   const valueFinishTime = dayjs(dateTo).format('YY/MM/DD HH:MM');
@@ -66,7 +67,7 @@ const createEventFormEditTemplate = (data) => {
     </div>
 
     <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled}>Save</button>
-    <button class="event__reset-btn" type="reset">Delete</button>
+    <button class="event__reset-btn" type="reset">${isEditForm ? 'Delete' : 'Cancel'}</button>
     <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
     </button>
@@ -78,20 +79,21 @@ const createEventFormEditTemplate = (data) => {
 </form>`;
 };
 
-export default class EventFormEdit extends SmartView {
-  constructor(point) {
+export default class EventForm extends SmartView {
+  constructor(point, isEditForm) {
     super();
-    this._data = EventFormEdit.parsePointToData(point);
+    this._data = EventForm.parsePointToData(point);
 
     this._datepickerStart = null;
     this._datepickerEnd = null;
+    this._isEditForm = isEditForm;
 
     this._rollupBtnClickHandler = this._rollupBtnClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._cityChangeHandler = this._cityChangeHandler.bind(this);
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
-
+    this._priceInputHandler = this._priceInputHandler.bind(this);
     this._startTimeHandler = this._startTimeHandler.bind(this);
     this._endTimeHandler = this._endTimeHandler.bind(this);
 
@@ -99,7 +101,7 @@ export default class EventFormEdit extends SmartView {
   }
 
   getTemplate() {
-    return createEventFormEditTemplate(this._data);
+    return createEventFormEditTemplate(this._data, this._isEditForm);
   }
 
   removeElement() {
@@ -116,11 +118,13 @@ export default class EventFormEdit extends SmartView {
   _setInnerHandelers() {
     this.getElement().querySelector('.event__type-group').addEventListener('change', this._typeChangeHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._cityChangeHandler);
+    this.getElement().querySelector('.event__input--price').addEventListener('change', this._priceInputHandler);
+
     this._setDatePicker();
   }
 
   reset(point) {
-    this.updateData(EventFormEdit.parsePointToData(point));
+    this.updateData(EventForm.parsePointToData(point));
   }
 
   _rollupBtnClickHandler(evt) {
@@ -130,7 +134,7 @@ export default class EventFormEdit extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(EventFormEdit.parseDataToPoint(this._data));
+    this._callback.formSubmit(EventForm.parseDataToPoint(this._data));
   }
 
   _typeChangeHandler(evt) {
@@ -143,18 +147,45 @@ export default class EventFormEdit extends SmartView {
 
   _cityChangeHandler(evt) {
     evt.preventDefault();
-    this.updateData({
-      destination: {
-        description: generateDestination().description,
-        name: evt.target.value,
-        pictures: generateDestination().pictures,
-      },
-    });
+    const city = evt.target.value;
+    const inputValue = this.getElement().querySelector('.event__input--destination');
+
+    if (!city || !matchCity(city, CITY_POINTS)) {
+      inputValue.setCustomValidity('Сhoose a city from the list');
+    } else {
+      inputValue.setCustomValidity('');
+      this.updateData({
+        destination: {
+          description: generateDestination().description,
+          name: city,
+          pictures: generateDestination().pictures,
+        },
+      });
+    }
+    inputValue.reportValidity();
+  }
+
+  _priceInputHandler(evt) {
+    evt.preventDefault();
+    const inputValue = this.getElement().querySelector('.event__input--price');
+    const price = evt.target.value;
+    const priceNumber = Number(price);
+
+    if (!price || priceNumber < 0 || !priceNumber) {
+      inputValue.setCustomValidity('The field must be filled with a positive number');
+    } else {
+      inputValue.setCustomValidity('');
+      this.updateData({
+        basePrice: priceNumber,
+      });
+    }
+
+    inputValue.reportValidity();
   }
 
   _formDeleteClickHandler(evt) {
     evt.preventDefault();
-    this._callback.deleteClick(EventFormEdit.parseDataToPoint(this._data));
+    this._callback.deleteClick(EventForm.parseDataToPoint(this._data));
   }
 
   _startTimeHandler([userDate]) {

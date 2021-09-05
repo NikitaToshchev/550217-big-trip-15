@@ -32,3 +32,5 @@ export const getDurationDiff = (dateFrom, dateTo) => dayjs(dateTo).diff(dayjs(da
 export const sortTimeDuration = (pointA, pointB) => getDurationDiff(pointA.dateTo, pointA.dateFrom) - getDurationDiff(pointB.dateTo, pointB.dateFrom);
 
 export const sortPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
+
+export const matchCity = (city, array) => array.some((it) => it === city);
