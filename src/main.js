@@ -11,7 +11,7 @@ import FilterPresenter from './presenter/filter.js';
 import PointsModel from './model/points.js';
 import FilterModel from './model/filter.js';
 
-const POINT_COUNT = 2;
+const POINT_COUNT = 5;
 
 const points = new Array(POINT_COUNT).fill().map(generatePoint);
 

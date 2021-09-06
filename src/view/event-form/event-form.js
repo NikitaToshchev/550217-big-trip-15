@@ -8,6 +8,7 @@ import SmartView from '../smart.js';
 import flatpickr from 'flatpickr';
 import '../../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { matchCity } from '../../utils/common.js';
+import { nanoid } from 'nanoid';
 
 const createEventFormEditTemplate = (data, isEditForm) => {
   const { id, type, destination, basePrice, dateTo, dateFrom, offers } = data;
@@ -17,6 +18,7 @@ const createEventFormEditTemplate = (data, isEditForm) => {
   const isSubmitDisabled = valueStartTime > valueFinishTime ? 'disabled' : '';
   const isOffersElement = offers.length !== 0 ? createEventFormOffersTemplate(data) : '';
   const isDestinationElement = Object.keys(destination).length !== 0 ? createEventFormDestinationTemplate(data) : '';
+  const isRollupButton = isEditForm ? '<button class="event__rollup-btn" type="button">' : '';
 
   return `<form class="event event--edit" action="#" method="post">
   <header class="event__header">
@@ -68,7 +70,7 @@ const createEventFormEditTemplate = (data, isEditForm) => {
 
     <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled}>Save</button>
     <button class="event__reset-btn" type="reset">${isEditForm ? 'Delete' : 'Cancel'}</button>
-    <button class="event__rollup-btn" type="button">
+    ${isRollupButton}
       <span class="visually-hidden">Open event</span>
     </button>
   </header>
@@ -79,8 +81,45 @@ const createEventFormEditTemplate = (data, isEditForm) => {
 </form>`;
 };
 
+const BLANK_POINT = {
+  id: nanoid(),
+  type: 'taxi',
+  destination: {
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    name: 'Amsterdam',
+    pictures: [
+      {
+        src: 'http://picsum.photos/248/152?r=1',
+        description: 'mountains',
+      },
+      {
+        src: 'http://picsum.photos/248/152?r=2',
+        description: 'foggy forest',
+      },
+      {
+        src: 'http://picsum.photos/248/152?r=3',
+        description: 'bumps',
+      },
+    ],
+  },
+  dateFrom: '2019-07-10T22:55:56.845Z',
+  dateTo: '2019-07-11T11:22:13.375Z',
+  basePrice: 1,
+  offers: [
+    {
+      title: 'Upgrade to a business class',
+      price: 120,
+    },
+    {
+      title: 'Choose the radio station',
+      price: 60,
+    },
+  ],
+  isFavorite: false,
+};
+
 export default class EventForm extends SmartView {
-  constructor(point, isEditForm) {
+  constructor(point = BLANK_POINT, isEditForm) {
     super();
     this._data = EventForm.parsePointToData(point);
 

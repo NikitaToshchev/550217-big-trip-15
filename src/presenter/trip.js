@@ -20,6 +20,9 @@ export default class Trip {
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
 
+    this._currentSortType = SortType.DAY.name;
+    this._filterType = FilterType.EVERYTHING;
+
     this._listComponent = new ListView();
     this._infoComponent = new InfoView();
     this._infoMainComponent = null;
@@ -27,8 +30,6 @@ export default class Trip {
     this._sortComponent = null;
     this._listEmptyComponent = null;
 
-    this._currentSortType = SortType.DAY.name;
-    this._filterType = FilterType.EVERYTHING;
     this._pointPresenter = new Map();
 
     this._handleModeChange = this._handleModeChange.bind(this);
@@ -39,12 +40,10 @@ export default class Trip {
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
 
-    // не знаю зачем передаю поинтсмодел
-    this._newPointPresenter = new NewPointPresenter(this._listComponent, this._handleViewAction, this._pointsModel);
+    this._newPointPresenter = new NewPointPresenter(this._listComponent, this._handleViewAction);
   }
 
   init() {
-    this._renderTripHeader();
     this._renderBoard();
   }
 
@@ -139,6 +138,7 @@ export default class Trip {
       this._renderListEmpty();
       return;
     }
+    this._renderTripHeader();
     this._renderSort();
     this._renderList();
     this._renderPoints();
@@ -196,14 +196,12 @@ export default class Trip {
       case UpdateType.MINOR:
         this._clearBoard();
         this._renderBoard();
-        this._renderTripHeader();
 
         break;
       // обновить всю доску (например, при переключении фильтра)
       case UpdateType.MAJOR:
         this._clearBoard({ resetSortType: true });
         this._renderBoard();
-        this._renderTripHeader();
         break;
     }
   }
