@@ -10,7 +10,7 @@ const emptyListTextType = {
 const createListEmptyTemplate = (filterType) => {
   const emptyListTextValue = emptyListTextType[filterType];
 
-  `<p class="trip-events__msg">${emptyListTextValue}</p>`;
+  return `<p class="trip-events__msg">${emptyListTextValue}</p>`;
 };
 
 export default class ListEmpty extends AbstractView {

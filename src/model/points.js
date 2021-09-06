@@ -11,7 +11,7 @@ export default class Points extends AbstractObserver {
   }
 
   getPoints() {
-    return this._points;
+    return this._points.sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
   }
 
   updatePoint(updateType, update) {

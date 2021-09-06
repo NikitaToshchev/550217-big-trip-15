@@ -11,7 +11,7 @@ import FilterPresenter from './presenter/filter.js';
 import PointsModel from './model/points.js';
 import FilterModel from './model/filter.js';
 
-const POINT_COUNT = 5;
+const POINT_COUNT = 4;
 
 const points = new Array(POINT_COUNT).fill().map(generatePoint);
 
@@ -32,7 +32,10 @@ filterPresenter.init();
 const tripPresenter = new TripPresenter(eventsElement, mainElement, filterModel, pointsModel);
 tripPresenter.init();
 
-document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
+const newPointButton = document.querySelector('.trip-main__event-add-btn');
+
+newPointButton.addEventListener('click', (evt) => {
   evt.preventDefault();
+  // newPointButton.disabled = true;
   tripPresenter.createPoint();
 });

@@ -101,12 +101,12 @@ export default class Trip {
   }
 
   _renderInfoMain() {
-    this._infoMainComponent = new InfoMainView(this._getPoints());
+    this._infoMainComponent = new InfoMainView(this._pointsModel.getPoints());
     render(this._infoComponent, this._infoMainComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderTotalCost() {
-    this._totalCostComponent = new TotalCostView(this._getPoints());
+    this._totalCostComponent = new TotalCostView(this._pointsModel.getPoints());
     render(this._infoComponent, this._totalCostComponent, RenderPosition.BEFOREEND);
   }
 
@@ -118,8 +118,11 @@ export default class Trip {
     this._newPointPresenter.destroy();
     this._pointPresenter.forEach((presenter) => presenter.destroy());
     this._pointPresenter.clear();
+
     remove(this._sortComponent);
     remove(this._infoComponent);
+    remove(this._infoMainComponent);
+    remove(this._totalCostComponent);
 
     if (resetSortType) {
       this._currentSortType = SortType.DAY.name;
@@ -134,11 +137,13 @@ export default class Trip {
     const points = this._pointsModel.getPoints();
     const filteredPoints = filter[this._filterType](points);
 
+    this._renderTripHeader();
+
     if (filteredPoints.length === 0) {
       this._renderListEmpty();
       return;
     }
-    this._renderTripHeader();
+
     this._renderSort();
     this._renderList();
     this._renderPoints();
@@ -162,17 +167,10 @@ export default class Trip {
 
     this._currentSortType = sortType;
     this._clearBoard();
-    this._sortComponent = new SortView(sortType);
-    this._renderPoints();
-    this._renderSort();
+    this._renderBoard();
   }
 
-  // Наблюдает за действиями пользователя
-  // Вызывает обновление модели
   _handleViewAction(actionType, updateType, update) {
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this._pointsModel.updatePoint(updateType, update);
@@ -186,8 +184,6 @@ export default class Trip {
     }
   }
 
-  // Наблюдает за действиями модели
-  // В зависимости от типа изменения решает, что делать
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
@@ -196,9 +192,7 @@ export default class Trip {
       case UpdateType.MINOR:
         this._clearBoard();
         this._renderBoard();
-
         break;
-      // обновить всю доску (например, при переключении фильтра)
       case UpdateType.MAJOR:
         this._clearBoard({ resetSortType: true });
         this._renderBoard();

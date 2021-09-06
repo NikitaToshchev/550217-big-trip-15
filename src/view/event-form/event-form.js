@@ -85,25 +85,17 @@ const BLANK_POINT = {
   id: nanoid(),
   type: 'taxi',
   destination: {
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    name: 'Amsterdam',
+    description: 'Chamonix, is a beautiful city, a true asian pearl, with crowded streets.',
+    name: 'Chamonix',
     pictures: [
       {
-        src: 'http://picsum.photos/248/152?r=1',
-        description: 'mountains',
-      },
-      {
-        src: 'http://picsum.photos/248/152?r=2',
-        description: 'foggy forest',
-      },
-      {
-        src: 'http://picsum.photos/248/152?r=3',
-        description: 'bumps',
+        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        description: 'Chamonix parliament building',
       },
     ],
   },
-  dateFrom: '2019-07-10T22:55:56.845Z',
-  dateTo: '2019-07-11T11:22:13.375Z',
+  dateFrom: new Date(),
+  dateTo: new Date(),
   basePrice: 1,
   offers: [
     {
@@ -115,7 +107,6 @@ const BLANK_POINT = {
       price: 60,
     },
   ],
-  isFavorite: false,
 };
 
 export default class EventForm extends SmartView {
@@ -257,18 +248,18 @@ export default class EventForm extends SmartView {
         'time_24hr': true,
         onChange: this._startTimeHandler,
       },
-    ),
+    );
 
-      this._datepickerEnd = flatpickr(
-        this.getElement().querySelector('input[name="event-end-time"]'),
-        {
-          dateFormat: 'y/m/d H:i',
-          enableTime: true,
-          minDate: this._datepickerStart.input.value,
-          'time_24hr': true,
-          onChange: this._endTimeHandler,
-        },
-      );
+    this._datepickerEnd = flatpickr(
+      this.getElement().querySelector('input[name="event-end-time"]'),
+      {
+        dateFormat: 'y/m/d H:i',
+        enableTime: true,
+        minDate: this._datepickerStart.input.value,
+        'time_24hr': true,
+        onChange: this._endTimeHandler,
+      },
+    );
   }
 
   _resetDatepicker() {
