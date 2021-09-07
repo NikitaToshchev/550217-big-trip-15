@@ -27,10 +27,10 @@ export const getRandomArray = (arr) => {
 
 export const getRandomArrElement = (arr) => arr.length ? arr[getRandomNum(0, arr.length - 1)] : null;
 
-export const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
-
 export const getDurationDiff = (dateFrom, dateTo) => dayjs(dateTo).diff(dayjs(dateFrom));
 
 export const sortTimeDuration = (pointA, pointB) => getDurationDiff(pointA.dateTo, pointA.dateFrom) - getDurationDiff(pointB.dateTo, pointB.dateFrom);
 
 export const sortPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
+
+export const matchCity = (city, array) => array.some((it) => it === city);

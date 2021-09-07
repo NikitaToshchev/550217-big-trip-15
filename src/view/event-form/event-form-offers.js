@@ -15,5 +15,3 @@ export const createEventFormOffersTemplate = (point) => {
     </div>
   </section>`;
 };
-
-// изменять checked в use it late есть код

@@ -6,21 +6,36 @@ import { RenderPosition, render } from './utils/render.js';
 // import EventFormNewPoint from './view/event-form-new-point.js';
 
 import MenuView from './view/menu.js';
-import FilterView from './view/filter.js';
 import TripPresenter from './presenter/trip.js';
+import FilterPresenter from './presenter/filter.js';
+import PointsModel from './model/points.js';
+import FilterModel from './model/filter.js';
 
 const POINT_COUNT = 4;
 
 const points = new Array(POINT_COUNT).fill().map(generatePoint);
-points.sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
 
 const mainElement = document.querySelector('.trip-main');
 const navigationElement = document.querySelector('.trip-controls__navigation');
-const filtersElement = document.querySelector('.trip-controls__filters');
 const eventsElement = document.querySelector('.trip-events');
 
 render(navigationElement, new MenuView(), RenderPosition.BEFOREEND);
-render(filtersElement, new FilterView(), RenderPosition.BEFOREEND);
 
-const tripPresenter = new TripPresenter(eventsElement, mainElement);
-tripPresenter.init(points);
+const pointsModel = new PointsModel();
+pointsModel.setPoints(points);
+
+const filtersElement = document.querySelector('.trip-controls__filters');
+const filterModel = new FilterModel();
+const filterPresenter = new FilterPresenter(filtersElement, filterModel);
+filterPresenter.init();
+
+const tripPresenter = new TripPresenter(eventsElement, mainElement, filterModel, pointsModel);
+tripPresenter.init();
+
+const newPointButton = document.querySelector('.trip-main__event-add-btn');
+
+newPointButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  // newPointButton.disabled = true;
+  tripPresenter.createPoint();
+});
