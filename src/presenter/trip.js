@@ -25,6 +25,7 @@ export default class Trip {
 
     this._listComponent = new ListView();
     this._infoComponent = new InfoView();
+    this._newPointPresenter = new NewPointPresenter();
     this._infoMainComponent = null;
     this._totalCostComponent = null;
     this._sortComponent = null;
@@ -36,21 +37,28 @@ export default class Trip {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
-
-    this._pointsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
-
-    this._newPointPresenter = new NewPointPresenter(this._listComponent, this._handleViewAction);
   }
 
   init() {
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
     this._renderBoard();
   }
 
-  createPoint() {
+  destroy() {
+    this._clearBoard({ resetSortType: true });
+
+    remove(this._listComponent);
+
+    this._pointsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
+  }
+
+  createPoint(callback) {
     this._currentSortType = SortType.DAY.name;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._newPointPresenter.init();
+    this._newPointPresenter = new NewPointPresenter(this._listComponent, this._handleViewAction);
+    this._newPointPresenter.init(callback);
   }
 
   _getPoints() {
@@ -63,8 +71,9 @@ export default class Trip {
         return filteredPoints.sort(sortTimeDuration);
       case SortType.PRICE.name:
         return filteredPoints.sort(sortPrice);
+      default:
+        return filteredPoints.sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
     }
-    return filteredPoints.sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
   }
 
   _renderSort() {

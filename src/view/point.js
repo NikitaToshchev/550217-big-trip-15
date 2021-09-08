@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { getDurationTime } from '../utils/date.js';
+import { getDurationTime, getDurationDiff } from '../utils/date.js';
 import { createPointOffersListTemplate } from './point-offers.js';
 import AbstractView from './abstract.js';
 
@@ -9,7 +9,7 @@ const createPointTemplate = (point) => {
   const dateFromMonthDay = dayjs(dateFrom).format('MMM D');
   const dateFromHoursMinutes = dayjs(dateFrom).format('HH:mm');
   const dateToHoursMinutes = dayjs(dateTo).format('HH:mm');
-  const durationTime = getDurationTime(dateTo, dateFrom);
+  const durationTime = getDurationTime(getDurationDiff(dateFrom, dateTo));
   const dateTimeFrom = dayjs(dateFrom).format('YYYY-MM-DD');
   const dateTimeTo = dayjs(dateTo).format('YYYY-MM-DD');
 

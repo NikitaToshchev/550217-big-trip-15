@@ -10,16 +10,20 @@ export default class NewPoint {
     this._changeData = changeData;
     this._isEditForm = false;
     this._eventFormComponent = null;
+    this._destroyCallback = null;
 
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init() {
+  init(callback) {
     if (this._eventFormComponent !== null) {
       return;
     }
+
+    this._destroyCallback = callback;
+
     this._listItemComponent = new ListItemView();
     this._eventFormComponent = new EventFormView(undefined, this._isEditForm);
 
@@ -34,6 +38,10 @@ export default class NewPoint {
   destroy() {
     if (this._eventFormComponent === null) {
       return;
+    }
+
+    if (this._destroyCallback !== null) {
+      this._destroyCallback();
     }
 
     remove(this._eventFormComponent);

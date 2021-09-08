@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import { getRandomNum } from './common.js';
+dayjs.extend(duration);
 
 export const generateDate = () => {
   const maxDaysGap = 10;
@@ -9,17 +11,19 @@ export const generateDate = () => {
   return dayjs().add(daysGap, 'day').add(minuteGap, 'minute').toDate();
 };
 
-const addleadingZero = (n) => String(n).padStart(2, '0');
+export const getDurationDiff = (dateFrom, dateTo) => dayjs(dateTo).diff(dayjs(dateFrom));
 
-export const getDurationTime = (dateTo, dateFrom) => {
-  const diffDays = addleadingZero(dayjs(dateTo).diff(dayjs(dateFrom), 'day'));
-  const diffHours = addleadingZero(dayjs(dateTo).subtract(diffDays, 'day').diff(dateFrom, 'hour'));
-  const diffMinutes = addleadingZero(dayjs(dateTo).subtract(diffDays, 'day').subtract(diffHours, 'hour').diff(dateFrom, 'minute'));
+export const sortTimeDuration = (pointA, pointB) => getDurationDiff(pointA.dateTo, pointA.dateFrom) - getDurationDiff(pointB.dateTo, pointB.dateFrom);
 
-  if (diffDays > 0) {
-    return `${diffDays}D ${diffHours}H ${diffMinutes}M`;
-  } else if (diffHours > 0) {
-    return `${diffHours}H ${diffMinutes}M`;
+export const getDurationTime = (ms) => {
+  const days = dayjs.duration(ms).format('DD');
+  const hours = dayjs.duration(ms).format('HH');
+  const minutes = dayjs.duration(ms).format('mm');
+
+  if (days > 0) {
+    return `${days}D ${hours}H ${minutes}M`;
+  } else if (hours > 0) {
+    return `${hours}H ${minutes}M`;
   }
-  return `${diffMinutes}M`;
+  return `${minutes}M`;
 };

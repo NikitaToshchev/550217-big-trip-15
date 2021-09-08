@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 export const getRandomNum = (min, max, precision) => {
   if (min > max) {
     throw new Error('Числа должны быть в диапазоне от меньшего к большему');
@@ -26,10 +24,6 @@ export const getRandomArray = (arr) => {
 };
 
 export const getRandomArrElement = (arr) => arr.length ? arr[getRandomNum(0, arr.length - 1)] : null;
-
-export const getDurationDiff = (dateFrom, dateTo) => dayjs(dateTo).diff(dayjs(dateFrom));
-
-export const sortTimeDuration = (pointA, pointB) => getDurationDiff(pointA.dateTo, pointA.dateFrom) - getDurationDiff(pointB.dateTo, pointB.dateFrom);
 
 export const sortPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 

@@ -22,6 +22,8 @@ export const render = (container, child, place) => {
     case RenderPosition.BEFOREEND:
       container.append(child);
       break;
+    default:
+      throw new Error('There is no such option');
   }
 };
 
