@@ -33,6 +33,11 @@ const moneyChart = (moneyCtx, points) => {
       }],
     },
     options: {
+      layout: {
+        padding: {
+          left: 45,
+        },
+      },
       plugins: {
         datalabels: {
           font: {
@@ -119,6 +124,11 @@ const typeChart = (typeCtx, points) => {
       }],
     },
     options: {
+      layout: {
+        padding: {
+          left: 45,
+        },
+      },
       plugins: {
         datalabels: {
           font: {
@@ -204,6 +214,11 @@ const timeChart = (timeCtx, points) => {
       }],
     },
     options: {
+      layout: {
+        padding: {
+          left: 45,
+        },
+      },
       plugins: {
         datalabels: {
           font: {

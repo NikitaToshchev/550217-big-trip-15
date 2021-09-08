@@ -35,7 +35,6 @@ const tripPresenter = new TripPresenter(eventsElement, mainElement, filterModel,
 tripPresenter.init();
 
 const addNewPointButton = document.querySelector('.trip-main__event-add-btn');
-// addNewPointButton.disabled = true;
 
 const handleNewPointFormClose = () => {
   addNewPointButton.disabled = false;
@@ -57,16 +56,22 @@ const handleSiteMenuClick = (menuItem) => {
         tripPresenter.destroy();
         tripPresenter.init();
         remove(statsComponent);
+        statsComponent = null;
         currentMenuItem = MenuItem.TABLE;
+        [...filtersElement.querySelectorAll('.trip-filters__filter-input')].map((input) => input.disabled = false);
+        addNewPointButton.disabled = false;
         menuComponent.setMenuItem(MenuItem.TABLE);
       }
       break;
     case MenuItem.STATS:
       if (currentMenuItem !== MenuItem.STATS) {
         tripPresenter.destroy();
+        tripPresenter.renderTripHeader();
         statsComponent = new StatsView(pointsModel.getPoints());
         render(eventsElement, statsComponent, RenderPosition.BEFOREEND);
         currentMenuItem = MenuItem.STATS;
+        [...filtersElement.querySelectorAll('.trip-filters__filter-input')].map((input) => input.disabled = true);
+        addNewPointButton.disabled = true;
         menuComponent.setMenuItem(MenuItem.STATS);
       }
       break;
@@ -76,6 +81,3 @@ const handleSiteMenuClick = (menuItem) => {
 };
 
 menuComponent.setMenuClickHandler(handleSiteMenuClick);
-
-statsComponent = new StatsView(pointsModel.getPoints());
-render(eventsElement, statsComponent, RenderPosition.BEFOREEND);

@@ -146,7 +146,7 @@ export default class Trip {
     const points = this._pointsModel.getPoints();
     const filteredPoints = filter[this._filterType](points);
 
-    this._renderTripHeader();
+    this.renderTripHeader();
 
     if (filteredPoints.length === 0) {
       this._renderListEmpty();
@@ -158,7 +158,7 @@ export default class Trip {
     this._renderPoints();
   }
 
-  _renderTripHeader() {
+  renderTripHeader() {
     this._renderInfo();
     this._renderInfoMain();
     this._renderTotalCost();
