@@ -6,8 +6,19 @@ import { getDurationTime, getDurationDiff } from '../utils/date.js';
 const moneyChart = (moneyCtx, points) => {
 
   const map = Array.from(points.reduce((point, { type, basePrice }) => point.set(type, (point.get(type) || 0) + basePrice), new Map));
-  const types = map.slice().map((item) => item[0].toUpperCase());
-  const prices = map.slice().map((item) => item[1]);
+
+  const sortMap = map.sort((a, b) => {
+    if (a[1] < b[1]) {
+      return 1;
+    }
+    if (a[1] > b[1]) {
+      return -1;
+    }
+    return 0;
+  });
+
+  const types = sortMap.slice().map((item) => item[0].toUpperCase());
+  const prices = sortMap.slice().map((item) => item[1]);
 
   const chart = new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
@@ -81,8 +92,19 @@ const typeChart = (typeCtx, points) => {
 
   const map = Array.from(points.reduce(
     (point, { type }) => point.set(type, (point.get(type) || 0) + 1), new Map));
-  const types = map.slice().map((item) => item[0].toUpperCase());
-  const times = map.slice().map((item) => item[1]);
+
+  const sortMap = map.sort((a, b) => {
+    if (a[1] < b[1]) {
+      return 1;
+    }
+    if (a[1] > b[1]) {
+      return -1;
+    }
+    return 0;
+  });
+
+  const types = sortMap.slice().map((item) => item[0].toUpperCase());
+  const times = sortMap.slice().map((item) => item[1]);
 
   const chart = new Chart(typeCtx, {
     plugins: [ChartDataLabels],
@@ -155,8 +177,19 @@ const typeChart = (typeCtx, points) => {
 const timeChart = (timeCtx, points) => {
 
   const map = Array.from(points.reduce((point, { type, dateFrom, dateTo }) => point.set(type, (point.get(type) || 0) + getDurationDiff(dateFrom, dateTo)), new Map));
-  const types = map.slice().map((item) => item[0].toUpperCase());
-  const time = map.slice().map((item) => item[1]);
+
+  const sortMap = map.sort((a, b) => {
+    if (a[1] < b[1]) {
+      return 1;
+    }
+    if (a[1] > b[1]) {
+      return -1;
+    }
+    return 0;
+  });
+
+  const types = sortMap.slice().map((item) => item[0].toUpperCase());
+  const time = sortMap.slice().map((item) => item[1]);
 
   const chart = new Chart(timeCtx, {
     plugins: [ChartDataLabels],

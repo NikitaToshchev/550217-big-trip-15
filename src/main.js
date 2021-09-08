@@ -1,5 +1,5 @@
 import { generatePoint } from './mock/point.js';
-import { RenderPosition, render } from './utils/render.js';
+import { RenderPosition, render, remove } from './utils/render.js';
 import { MenuItem } from './const.js';
 
 // import LoadingView from './view/loading.js';
@@ -47,16 +47,28 @@ addNewPointButton.addEventListener('click', (evt) => {
   tripPresenter.createPoint(handleNewPointFormClose);
 });
 
+let statsComponent = null;
+let currentMenuItem = MenuItem.TABLE;
+
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
-      tripPresenter.destroy();
-      tripPresenter.init();
-
+      if (currentMenuItem !== MenuItem.TABLE) {
+        tripPresenter.destroy();
+        tripPresenter.init();
+        remove(statsComponent);
+        currentMenuItem = MenuItem.TABLE;
+        menuComponent.setMenuItem(MenuItem.TABLE);
+      }
       break;
     case MenuItem.STATS:
-      tripPresenter.destroy();
-      // tripPresenter.init();
+      if (currentMenuItem !== MenuItem.STATS) {
+        tripPresenter.destroy();
+        statsComponent = new StatsView(pointsModel.getPoints());
+        render(eventsElement, statsComponent, RenderPosition.BEFOREEND);
+        currentMenuItem = MenuItem.STATS;
+        menuComponent.setMenuItem(MenuItem.STATS);
+      }
       break;
     default:
       throw new Error('There is no such option');
@@ -65,5 +77,5 @@ const handleSiteMenuClick = (menuItem) => {
 
 menuComponent.setMenuClickHandler(handleSiteMenuClick);
 
-// отрендерено stats для отладки
-render(eventsElement, new StatsView(pointsModel.getPoints()), RenderPosition.BEFOREEND);
+statsComponent = new StatsView(pointsModel.getPoints());
+render(eventsElement, statsComponent, RenderPosition.BEFOREEND);
