@@ -42,8 +42,8 @@ const handleNewPointFormClose = () => {
 
 addNewPointButton.addEventListener('click', (evt) => {
   evt.preventDefault();
-  addNewPointButton.disabled = true;
   tripPresenter.createPoint(handleNewPointFormClose);
+  addNewPointButton.disabled = true;
 });
 
 let statsComponent = null;

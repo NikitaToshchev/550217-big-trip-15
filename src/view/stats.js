@@ -20,7 +20,7 @@ const moneyChart = (moneyCtx, points) => {
   const types = sortMap.slice().map((item) => item[0].toUpperCase());
   const prices = sortMap.slice().map((item) => item[1]);
 
-  const chart = new Chart(moneyCtx, {
+  return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
@@ -89,8 +89,6 @@ const moneyChart = (moneyCtx, points) => {
       },
     },
   });
-
-  return chart;
 };
 
 const typeChart = (typeCtx, points) => {
@@ -111,7 +109,7 @@ const typeChart = (typeCtx, points) => {
   const types = sortMap.slice().map((item) => item[0].toUpperCase());
   const times = sortMap.slice().map((item) => item[1]);
 
-  const chart = new Chart(typeCtx, {
+  return new Chart(typeCtx, {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
@@ -180,8 +178,6 @@ const typeChart = (typeCtx, points) => {
       },
     },
   });
-
-  return chart;
 };
 
 const timeChart = (timeCtx, points) => {
@@ -201,7 +197,7 @@ const timeChart = (timeCtx, points) => {
   const types = sortMap.slice().map((item) => item[0].toUpperCase());
   const time = sortMap.slice().map((item) => item[1]);
 
-  const chart = new Chart(timeCtx, {
+  return new Chart(timeCtx, {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
@@ -270,8 +266,6 @@ const timeChart = (timeCtx, points) => {
       },
     },
   });
-
-  return chart;
 };
 
 const createStatsTemplate = () => (
