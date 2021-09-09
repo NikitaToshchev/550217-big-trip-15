@@ -1,5 +1,6 @@
 import { RenderPosition, render, remove } from '../utils/render.js';
-import { sortPrice, sortTimeDuration } from '../utils/common.js';
+import { sortPrice } from '../utils/common.js';
+import { sortTimeDuration } from '../utils/date.js';
 
 import InfoView from '../view/info.js';
 import InfoMainView from '../view/info-main.js';
@@ -25,6 +26,7 @@ export default class Trip {
 
     this._listComponent = new ListView();
     this._infoComponent = new InfoView();
+    this._newPointPresenter = new NewPointPresenter();
     this._infoMainComponent = null;
     this._totalCostComponent = null;
     this._sortComponent = null;
@@ -36,21 +38,28 @@ export default class Trip {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
-
-    this._pointsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
-
-    this._newPointPresenter = new NewPointPresenter(this._listComponent, this._handleViewAction);
   }
 
   init() {
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
     this._renderBoard();
   }
 
-  createPoint() {
+  destroy() {
+    this._clearBoard({ resetSortType: true });
+
+    remove(this._listComponent);
+
+    this._pointsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
+  }
+
+  createPoint(callback) {
     this._currentSortType = SortType.DAY.name;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._newPointPresenter.init();
+    this._newPointPresenter = new NewPointPresenter(this._listComponent, this._handleViewAction);
+    this._newPointPresenter.init(callback);
   }
 
   _getPoints() {
@@ -63,8 +72,9 @@ export default class Trip {
         return filteredPoints.sort(sortTimeDuration);
       case SortType.PRICE.name:
         return filteredPoints.sort(sortPrice);
+      default:
+        return filteredPoints.sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
     }
-    return filteredPoints.sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
   }
 
   _renderSort() {
@@ -72,7 +82,7 @@ export default class Trip {
       this._sortComponent = null;
     }
 
-    this._sortComponent = new SortView(this._currentSortType);
+    this._sortComponent = new SortView(SortType, this._currentSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
     render(this._tripContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
   }
@@ -137,7 +147,7 @@ export default class Trip {
     const points = this._pointsModel.getPoints();
     const filteredPoints = filter[this._filterType](points);
 
-    this._renderTripHeader();
+    this.renderTripHeader();
 
     if (filteredPoints.length === 0) {
       this._renderListEmpty();
@@ -149,7 +159,7 @@ export default class Trip {
     this._renderPoints();
   }
 
-  _renderTripHeader() {
+  renderTripHeader() {
     this._renderInfo();
     this._renderInfoMain();
     this._renderTotalCost();
