@@ -17,6 +17,8 @@ export default class NewPoint {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
+  // init(offers, destinations, callback) {
+
   init(callback) {
     if (this._eventFormComponent !== null) {
       return;

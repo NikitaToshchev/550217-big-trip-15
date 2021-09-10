@@ -1,5 +1,3 @@
-
-
 export const createEventFormDestinationTemplate = (point) => {
   const { destination } = point;
 

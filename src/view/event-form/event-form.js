@@ -10,14 +10,17 @@ import '../../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { matchCity } from '../../utils/common.js';
 import { nanoid } from 'nanoid';
 
+// передавать в шаблон
+// offers, destinations,
+
 const createEventFormEditTemplate = (data, isEditForm) => {
-  const { id, type, destination, basePrice, dateTo, dateFrom, offers } = data;
+  const { id, type, basePrice, dateTo, dateFrom, offers, destination } = data;
   const valueStartTime = dayjs(dateFrom).format('YY/MM/DD HH:MM');
   const valueFinishTime = dayjs(dateTo).format('YY/MM/DD HH:MM');
 
   const isSubmitDisabled = valueStartTime > valueFinishTime ? 'disabled' : '';
   const isOffersElement = offers.length !== 0 ? createEventFormOffersTemplate(data) : '';
-  const isDestinationElement = Object.keys(destination).length !== 0 ? createEventFormDestinationTemplate(data) : '';
+  const isDestinationElement = Object.keys(POINT_TYPES).length !== 0 ? createEventFormDestinationTemplate(data) : '';
   const isRollupButton = isEditForm ? '<button class="event__rollup-btn" type="button">' : '';
 
   return `<form class="event event--edit" action="#" method="post">

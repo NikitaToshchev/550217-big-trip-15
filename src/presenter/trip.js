@@ -15,12 +15,14 @@ import NewPointPresenter from './new-point.js';
 import LoadingView from '../view/loading.js';
 
 export default class Trip {
-  constructor(tripContainer, infoContainer, filterModel, pointsModel, api) {
+  constructor(tripContainer, infoContainer, filterModel, pointsModel, offersModel, destinationsModel, api) {
     this._tripContainer = tripContainer;
     this._infoContainer = infoContainer;
 
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
+    this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
 
     this._currentSortType = SortType.DAY.name;
     this._filterType = FilterType.EVERYTHING;
@@ -60,9 +62,13 @@ export default class Trip {
   }
 
   createPoint(callback) {
+    this._offers = this._offersModel.getOffers();
+    this._destinations = this._destinationsModel.getDestinations();
+
     this._currentSortType = SortType.DAY.name;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this._newPointPresenter = new NewPointPresenter(this._listComponent, this._handleViewAction);
+    // this._newPointPresenter.init(this._offers, this._destinations, callback);
     this._newPointPresenter.init(callback);
   }
 
@@ -105,8 +111,10 @@ export default class Trip {
   }
 
   _renderPoint(point) {
+    this._offers = this._offersModel.getOffers();
+    this._destinations = this._destinationsModel.getDestinations();
     const pointPresenter = new PointPresenter(this._listComponent, this._handleViewAction, this._handleModeChange);
-    pointPresenter.init(point);
+    pointPresenter.init(point, this._offers, this._destinations);
     this._pointPresenter.set(point.id, pointPresenter);
   }
 

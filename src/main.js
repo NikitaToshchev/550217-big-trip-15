@@ -1,4 +1,3 @@
-// import { generatePoint } from './mock/point.js'; //удалить
 import { RenderPosition, render, remove } from './utils/render.js';
 import { MenuItem, UpdateType } from './const.js';
 import Api from './api.js';
@@ -9,6 +8,8 @@ import TripPresenter from './presenter/trip.js';
 import FilterPresenter from './presenter/filter.js';
 import PointsModel from './model/points.js';
 import FilterModel from './model/filter.js';
+import OffersModel from './model/offers.js';
+import DestinationsModel from './model/destinations.js';
 
 const AUTHORIZATION = 'Basic WegZnquFPYmp23n';
 const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
@@ -24,10 +25,12 @@ const addNewPointButton = document.querySelector('.trip-main__event-add-btn');
 const menuComponent = new MenuView();
 const pointsModel = new PointsModel();
 const filterModel = new FilterModel();
+const offersModel = new OffersModel();
+const destinationsModel = new DestinationsModel();
 
 const filterPresenter = new FilterPresenter(filtersElement, filterModel);
 filterPresenter.init();
-const tripPresenter = new TripPresenter(eventsElement, mainElement, filterModel, pointsModel, api);
+const tripPresenter = new TripPresenter(eventsElement, mainElement, filterModel, pointsModel, offersModel, destinationsModel, api);
 tripPresenter.init();
 
 addNewPointButton.disabled = true;
@@ -77,9 +80,15 @@ const handleSiteMenuClick = (menuItem) => {
   }
 };
 
+// api.getDestinations();
+// api.setOffers();
+// .then((points, offers, destinations) => {
+
 api.getPoints()
   .then((points) => {
     pointsModel.setPoints(UpdateType.INIT, points);
+    // offersModel.setOffers(offers);
+    // destinationsModel.setDestinations(destinations);
     render(navigationElement, menuComponent, RenderPosition.BEFOREEND);
     menuComponent.setMenuClickHandler(handleSiteMenuClick);
     addNewPointButton.disabled = false;
