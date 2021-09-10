@@ -2,10 +2,16 @@ import SmartView from './smart.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { getDurationTime, getDurationDiff } from '../utils/date.js';
+import { StatsType } from '../const.js';
 
 const moneyChart = (moneyCtx, points) => {
 
-  const map = Array.from(points.reduce((point, { type, basePrice }) => point.set(type, (point.get(type) || 0) + basePrice), new Map));
+  const map = Array.from(
+    points.reduce(
+      (point, { type, basePrice }) =>
+        point.set(type, (point.get(type) || 0) + basePrice),
+      new Map),
+  );
 
   const sortMap = map.sort((a, b) => {
     if (a[1] < b[1]) {
@@ -17,8 +23,13 @@ const moneyChart = (moneyCtx, points) => {
     return 0;
   });
 
-  const types = sortMap.slice().map((item) => item[0].toUpperCase());
-  const prices = sortMap.slice().map((item) => item[1]);
+  const types = sortMap
+    .slice()
+    .map((item) => item[0].toUpperCase());
+
+  const prices = sortMap
+    .slice()
+    .map((item) => item[1]);
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
@@ -67,7 +78,7 @@ const moneyChart = (moneyCtx, points) => {
             display: false,
             drawBorder: false,
           },
-          barThickness: 44,
+          barThickness: 34,
         }],
         xAxes: [{
           ticks: {
@@ -93,8 +104,12 @@ const moneyChart = (moneyCtx, points) => {
 
 const typeChart = (typeCtx, points) => {
 
-  const map = Array.from(points.reduce(
-    (point, { type }) => point.set(type, (point.get(type) || 0) + 1), new Map));
+  const map = Array.from(
+    points.reduce(
+      (point, { type }) =>
+        point.set(type, (point.get(type) || 0) + 1),
+      new Map),
+  );
 
   const sortMap = map.sort((a, b) => {
     if (a[1] < b[1]) {
@@ -106,8 +121,13 @@ const typeChart = (typeCtx, points) => {
     return 0;
   });
 
-  const types = sortMap.slice().map((item) => item[0].toUpperCase());
-  const times = sortMap.slice().map((item) => item[1]);
+  const types = sortMap
+    .slice()
+    .map((item) => item[0].toUpperCase());
+
+  const times = sortMap
+    .slice()
+    .map((item) => item[1]);
 
   return new Chart(typeCtx, {
     plugins: [ChartDataLabels],
@@ -156,7 +176,7 @@ const typeChart = (typeCtx, points) => {
             display: false,
             drawBorder: false,
           },
-          barThickness: 44,
+          barThickness: 34,
         }],
         xAxes: [{
           ticks: {
@@ -182,7 +202,12 @@ const typeChart = (typeCtx, points) => {
 
 const timeChart = (timeCtx, points) => {
 
-  const map = Array.from(points.reduce((point, { type, dateFrom, dateTo }) => point.set(type, (point.get(type) || 0) + getDurationDiff(dateFrom, dateTo)), new Map));
+  const map = Array.from(
+    points.reduce(
+      (point, { type, dateFrom, dateTo }) =>
+        point.set(type, (point.get(type) || 0) + getDurationDiff(dateFrom, dateTo)),
+      new Map),
+  );
 
   const sortMap = map.sort((a, b) => {
     if (a[1] < b[1]) {
@@ -194,8 +219,13 @@ const timeChart = (timeCtx, points) => {
     return 0;
   });
 
-  const types = sortMap.slice().map((item) => item[0].toUpperCase());
-  const time = sortMap.slice().map((item) => item[1]);
+  const types = sortMap
+    .slice()
+    .map((item) => item[0].toUpperCase());
+
+  const time = sortMap
+    .slice()
+    .map((item) => item[1]);
 
   return new Chart(timeCtx, {
     plugins: [ChartDataLabels],
@@ -244,7 +274,7 @@ const timeChart = (timeCtx, points) => {
             display: false,
             drawBorder: false,
           },
-          barThickness: 44,
+          barThickness: 34,
         }],
         xAxes: [{
           ticks: {
@@ -271,18 +301,9 @@ const timeChart = (timeCtx, points) => {
 const createStatsTemplate = () => (
   `<section class="statistics">
     <h2 class="visually-hidden">Trip statistics</h2>
-
-    <div class="statistics__item">
-      <canvas class="statistics__chart" id="money" width="900"></canvas>
-    </div>
-
-    <div class="statistics__item">
-      <canvas class="statistics__chart" id="type" width="900"></canvas>
-    </div>
-
-    <div class="statistics__item">
-      <canvas class="statistics__chart" id="time-spend" width="900"></canvas>
-    </div>
+    ${Object.values(StatsType).map((type) => (`<div class="statistics__item">
+      <canvas class="statistics__chart" id="${type}" width="900"></canvas>
+    </div>`)).join('')}
   </section>`
 );
 

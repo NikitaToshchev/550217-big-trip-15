@@ -1,15 +1,3 @@
-export const POINT_TYPES = [
-  'taxi',
-  'bus',
-  'train',
-  'ship',
-  'drive',
-  'flight',
-  'check-in',
-  'sightseeing',
-  'restaurant',
-];
-
 export const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
@@ -60,4 +48,22 @@ export const UpdateType = {
 export const MenuItem = {
   TABLE: 'Table',
   STATS: 'Stats',
+};
+
+export const StatsType = {
+  MONEY: 'money',
+  TYPE: 'type',
+  TIME_SPEND: 'time-spend',
+};
+
+export const PointTypes = {
+  TAXI: 'taxi',
+  BAS: 'bus',
+  TRAIN: 'train',
+  SHIP: 'ship',
+  DRIVE: 'drive',
+  FLIGHT: 'flight',
+  CHECK_IN: 'check-in',
+  SIGHTSEEING: 'sightseeing',
+  RESTAURANT: 'restaurant',
 };

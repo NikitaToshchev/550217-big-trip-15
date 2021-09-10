@@ -1,4 +1,4 @@
-import { POINT_TYPES } from '../../const.js';
+import { PointTypes } from '../../const.js';
 import { CITY_POINTS, OffersByType } from '../../mock/mock-data.js';
 import { generateDestination } from '../../mock/destination.js';
 import { createEventFormOffersTemplate } from './event-form-offers.js';
@@ -20,7 +20,7 @@ const createEventFormEditTemplate = (data, isEditForm) => {
 
   const isSubmitDisabled = valueStartTime > valueFinishTime ? 'disabled' : '';
   const isOffersElement = offers.length !== 0 ? createEventFormOffersTemplate(data) : '';
-  const isDestinationElement = Object.keys(POINT_TYPES).length !== 0 ? createEventFormDestinationTemplate(data) : '';
+  const isDestinationElement = Object.keys(PointTypes).length !== 0 ? createEventFormDestinationTemplate(data) : '';
   const isRollupButton = isEditForm ? '<button class="event__rollup-btn" type="button">' : '';
 
   return `<form class="event event--edit" action="#" method="post">
@@ -36,7 +36,7 @@ const createEventFormEditTemplate = (data, isEditForm) => {
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Event type</legend>
 
-          ${POINT_TYPES.map((pointType) => (`<div class="event__type-item">
+          ${Object.values(PointTypes).map((pointType) => (`<div class="event__type-item">
           <input id="event-type-${pointType}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}">
           <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-${id}">${pointType}</label>
         </div>`)).join('\n')}
