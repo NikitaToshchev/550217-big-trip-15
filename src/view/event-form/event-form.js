@@ -10,23 +10,12 @@ import '../../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { matchCity } from '../../utils/common.js';
 import { nanoid } from 'nanoid';
 
-const CITY_POINTS = [
-  'Amsterdam',
-  'Chamonix',
-  'Geneva',
-  'Liverpool',
-  'London',
-];
-
 const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) => {
   const { id, type, basePrice, dateTo, dateFrom, offers, destination } = data;
   const valueStartTime = dayjs(dateFrom).format('YY/MM/DD HH:MM');
   const valueFinishTime = dayjs(dateTo).format('YY/MM/DD HH:MM');
 
-  // const typeCities = destinations.map((item) => item.name);
-  // console.log(allOffers);
-  // console.log(typeCities)
-
+  const typeCities = destinations.map((item) => item.name);
 
   const isSubmitDisabled = valueStartTime > valueFinishTime ? 'disabled' : '';
   const isOffersElement = offers.length !== 0 ? createEventFormOffersTemplate(data) : '';
@@ -60,7 +49,7 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
       </label>
       <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${id}">
       <datalist id="destination-list-${id}">
-      ${CITY_POINTS.map((cityPoint) => (
+      ${typeCities.map((cityPoint) => (
     `<option value="${cityPoint}"></option>`)).join('\n')}
       </datalist>
     </div>
@@ -146,7 +135,7 @@ export default class EventForm extends SmartView {
   }
 
   getTemplate() {
-    return createEventFormEditTemplate(this._data, this._offers, this._destinations, this._typeCities, this._isEditForm);
+    return createEventFormEditTemplate(this._data, this._offers, this._destinations, this._isEditForm);
   }
 
   removeElement() {
@@ -194,17 +183,14 @@ export default class EventForm extends SmartView {
     evt.preventDefault();
     const city = evt.target.value;
     const inputValue = this.getElement().querySelector('.event__input--destination');
-    // вместо citypoints this._destinations.map((it) => it.name))
-    if (!city || !matchCity(city, CITY_POINTS)) {
+    if (!city || !matchCity(city, this._destinations.map((it) => it.name))) {
       inputValue.setCustomValidity('Сhoose a city from the list');
     } else {
       inputValue.setCustomValidity('');
       this.updateData({
         destination: {
-          // description: this._destinations.filter((destination) => evt.target.value === destination.name)[0].description,
           description: generateDestination().description,
           name: city,
-          // pictures: this._destinations.filter((destination) => evt.target.value === destination.name)[0].pictures,
           pictures: generateDestination().pictures,
         },
       });
@@ -314,3 +300,8 @@ export default class EventForm extends SmartView {
     return data;
   }
 }
+
+// вместо citypoints this._destinations.map((it) => it.name))
+
+// description: this._destinations.filter((destination) => evt.target.value === destination.name)[0].description,
+// pictures: this._destinations.filter((destination) => evt.target.value === destination.name)[0].pictures,
