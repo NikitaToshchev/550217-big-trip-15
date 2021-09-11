@@ -106,11 +106,3 @@ export const OffersByType = {
   'check-in': [],
   'sightseeing': [],
 };
-
-export const CITY_POINTS = [
-  'Amsterdam',
-  'Chamonix',
-  'Geneva',
-  'Liverpool',
-  'London',
-];

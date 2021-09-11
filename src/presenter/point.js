@@ -24,17 +24,15 @@ export default class Point {
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
-  // init(point, offers, destinations) {
-
-  init(point) {
+  init(point, offers, destinations) {
     this._point = point;
 
     const prevPointComponent = this._pointComponent;
     const prevEventFormEditComponent = this._eventFormComponent;
 
     this._pointComponent = new PointView(point);
-    // this._eventFormComponent = new EventFormView(point, offers, destinations, this._isEditForm);
-    this._eventFormComponent = new EventFormView(point, this._isEditForm);
+    this._eventFormComponent = new EventFormView(point, offers, destinations, this._isEditForm);
+    // this._eventFormComponent = new EventFormView(point, this._isEditForm);
 
     this._pointComponent.setRollupBtnClickHandler(this._handleRollupBtnClick);
     this._eventFormComponent.setRollupBtnClickHandler(this._handleRollupBtnFormClick);

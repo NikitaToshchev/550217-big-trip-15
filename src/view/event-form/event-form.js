@@ -1,5 +1,5 @@
 import { PointTypes } from '../../const.js';
-import { CITY_POINTS, OffersByType } from '../../mock/mock-data.js';
+import { OffersByType } from '../../mock/mock-data.js';
 import { generateDestination } from '../../mock/destination.js';
 import { createEventFormOffersTemplate } from './event-form-offers.js';
 import { createEventFormDestinationTemplate } from './event-form-destination.js';
@@ -10,17 +10,27 @@ import '../../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { matchCity } from '../../utils/common.js';
 import { nanoid } from 'nanoid';
 
-// передавать в шаблон
-// offers, destinations,
+const CITY_POINTS = [
+  'Amsterdam',
+  'Chamonix',
+  'Geneva',
+  'Liverpool',
+  'London',
+];
 
-const createEventFormEditTemplate = (data, isEditForm) => {
+const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) => {
   const { id, type, basePrice, dateTo, dateFrom, offers, destination } = data;
   const valueStartTime = dayjs(dateFrom).format('YY/MM/DD HH:MM');
   const valueFinishTime = dayjs(dateTo).format('YY/MM/DD HH:MM');
 
+  // const typeCities = destinations.map((item) => item.name);
+  // console.log(allOffers);
+  // console.log(typeCities)
+
+
   const isSubmitDisabled = valueStartTime > valueFinishTime ? 'disabled' : '';
   const isOffersElement = offers.length !== 0 ? createEventFormOffersTemplate(data) : '';
-  const isDestinationElement = Object.keys(PointTypes).length !== 0 ? createEventFormDestinationTemplate(data) : '';
+  const isDestinationElement = Object.keys(destination).length !== 0 ? createEventFormDestinationTemplate(data) : '';
   const isRollupButton = isEditForm ? '<button class="event__rollup-btn" type="button">' : '';
 
   return `<form class="event event--edit" action="#" method="post">
@@ -113,13 +123,15 @@ const BLANK_POINT = {
 };
 
 export default class EventForm extends SmartView {
-  constructor(point = BLANK_POINT, isEditForm) {
+  constructor(point = BLANK_POINT, offers, destinations, isEditForm) {
     super();
     this._data = EventForm.parsePointToData(point);
+    this._offers = offers;
+    this._destinations = destinations;
+    this._isEditForm = isEditForm;
 
     this._datepickerStart = null;
     this._datepickerEnd = null;
-    this._isEditForm = isEditForm;
 
     this._rollupBtnClickHandler = this._rollupBtnClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
@@ -134,7 +146,7 @@ export default class EventForm extends SmartView {
   }
 
   getTemplate() {
-    return createEventFormEditTemplate(this._data, this._isEditForm);
+    return createEventFormEditTemplate(this._data, this._offers, this._destinations, this._typeCities, this._isEditForm);
   }
 
   removeElement() {
@@ -182,15 +194,17 @@ export default class EventForm extends SmartView {
     evt.preventDefault();
     const city = evt.target.value;
     const inputValue = this.getElement().querySelector('.event__input--destination');
-
+    // вместо citypoints this._destinations.map((it) => it.name))
     if (!city || !matchCity(city, CITY_POINTS)) {
       inputValue.setCustomValidity('Сhoose a city from the list');
     } else {
       inputValue.setCustomValidity('');
       this.updateData({
         destination: {
+          // description: this._destinations.filter((destination) => evt.target.value === destination.name)[0].description,
           description: generateDestination().description,
           name: city,
+          // pictures: this._destinations.filter((destination) => evt.target.value === destination.name)[0].pictures,
           pictures: generateDestination().pictures,
         },
       });
@@ -290,12 +304,10 @@ export default class EventForm extends SmartView {
     this._callback.deleteClick = callback;
     this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._formDeleteClickHandler);
   }
-  // Метод задача которого взять инофрмацию и сделать ее снимок превратив в состояние
 
   static parsePointToData(point) {
     return Object.assign({}, point);
   }
-  // Метод используется чтобы сохранить состояние в инофрмацию
 
   static parseDataToPoint(data) {
     data = Object.assign({}, data);

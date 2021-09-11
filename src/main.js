@@ -101,5 +101,3 @@ Promise.all([
     pointsModel.setPoints(UpdateType.INIT, []);
     addNewPointButton.disabled = false;
   });
-
-  // для комитта
