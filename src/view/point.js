@@ -1,7 +1,16 @@
 import dayjs from 'dayjs';
 import { getDurationTime, getDurationDiff } from '../utils/date.js';
-import { createPointOffersListTemplate } from './point-offers.js';
 import AbstractView from './abstract.js';
+
+const createPointOffersListTemplate = (offers) => (
+  `<ul class="event__selected-offers">
+  ${offers.map((offer) => (`<li class="event__offer">
+      <span class="event__offer-title">${offer.title}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${offer.price}</span>
+    </li>`)).join('')}
+  </ul>`
+);
 
 const createPointTemplate = (point) => {
   const { type, destination, basePrice, dateTo, dateFrom, isFavorite, offers } = point;
