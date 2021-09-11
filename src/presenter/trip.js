@@ -68,8 +68,7 @@ export default class Trip {
     this._currentSortType = SortType.DAY.name;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this._newPointPresenter = new NewPointPresenter(this._listComponent, this._handleViewAction);
-    // this._newPointPresenter.init(this._offers, this._destinations, callback);
-    this._newPointPresenter.init(callback);
+    this._newPointPresenter.init(callback, this._offers, this._destinations);
   }
 
   _getPoints() {

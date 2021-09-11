@@ -17,9 +17,7 @@ export default class NewPoint {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  // init(offers, destinations, callback) {
-
-  init(callback) {
+  init(callback, offers, destinations) {
     if (this._eventFormComponent !== null) {
       return;
     }
@@ -27,7 +25,7 @@ export default class NewPoint {
     this._destroyCallback = callback;
 
     this._listItemComponent = new ListItemView();
-    this._eventFormComponent = new EventFormView(undefined, this._isEditForm);
+    this._eventFormComponent = new EventFormView(undefined, offers, destinations, this._isEditForm);
 
     render(this._pointListContainer, this._listItemComponent, RenderPosition.AFTERBEGIN);
     render(this._listItemComponent, this._eventFormComponent, RenderPosition.AFTERBEGIN);

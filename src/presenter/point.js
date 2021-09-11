@@ -32,7 +32,6 @@ export default class Point {
 
     this._pointComponent = new PointView(point);
     this._eventFormComponent = new EventFormView(point, offers, destinations, this._isEditForm);
-    // this._eventFormComponent = new EventFormView(point, this._isEditForm);
 
     this._pointComponent.setRollupBtnClickHandler(this._handleRollupBtnClick);
     this._eventFormComponent.setRollupBtnClickHandler(this._handleRollupBtnFormClick);
