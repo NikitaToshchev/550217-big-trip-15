@@ -102,3 +102,4 @@ Promise.all([
     addNewPointButton.disabled = false;
   });
 
+  // для комитта
