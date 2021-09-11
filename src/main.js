@@ -33,8 +33,8 @@ filterPresenter.init();
 const tripPresenter = new TripPresenter(eventsElement, mainElement, filterModel, pointsModel, offersModel, destinationsModel, api);
 tripPresenter.init();
 
-addNewPointButton.disabled = true;
 [...filtersElement.querySelectorAll('.trip-filters__filter-input')].map((input) => input.disabled = true);
+addNewPointButton.disabled = true;
 
 const handleNewPointFormClose = () => {
   addNewPointButton.disabled = false;
@@ -80,25 +80,25 @@ const handleSiteMenuClick = (menuItem) => {
   }
 };
 
-// api.getDestinations();
-// api.setOffers();
-// .then((points, offers, destinations) => {
+Promise.all([
+  api.getDestinations(),
+  api.getOffers(),
+  api.getPoints(),
+])
+  .then((values) => {
+    const [destinations, offers, points] = values;
 
-api.getPoints()
-  .then((points) => {
+    destinationsModel.setDestinations(UpdateType.INIT, destinations);
+    offersModel.setOffers(UpdateType.INIT, offers);
     pointsModel.setPoints(UpdateType.INIT, points);
-    console.log(points);
-    // offersModel.setOffers(offers);
-    // destinationsModel.setDestinations(destinations);
+
     render(navigationElement, menuComponent, RenderPosition.BEFOREEND);
     menuComponent.setMenuClickHandler(handleSiteMenuClick);
-    addNewPointButton.disabled = false;
     [...filtersElement.querySelectorAll('.trip-filters__filter-input')].map((input) => input.disabled = false);
+    addNewPointButton.disabled = false;
   })
   .catch(() => {
     pointsModel.setPoints(UpdateType.INIT, []);
-    render(navigationElement, menuComponent, RenderPosition.BEFOREEND);
-    menuComponent.setMenuClickHandler(handleSiteMenuClick);
     addNewPointButton.disabled = false;
-    [...filtersElement.querySelectorAll('.trip-filters__filter-input')].map((input) => input.disabled = false);
   });
+

@@ -19,8 +19,8 @@ export default class Trip {
     this._tripContainer = tripContainer;
     this._infoContainer = infoContainer;
 
-    this._pointsModel = pointsModel;
     this._filterModel = filterModel;
+    this._pointsModel = pointsModel;
     this._offersModel = offersModel;
     this._destinationsModel = destinationsModel;
 
@@ -113,6 +113,7 @@ export default class Trip {
   _renderPoint(point) {
     this._offers = this._offersModel.getOffers();
     this._destinations = this._destinationsModel.getDestinations();
+
     const pointPresenter = new PointPresenter(this._listComponent, this._handleViewAction, this._handleModeChange);
     pointPresenter.init(point, this._offers, this._destinations);
     this._pointPresenter.set(point.id, pointPresenter);
