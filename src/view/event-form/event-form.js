@@ -1,6 +1,4 @@
 import { PointTypes } from '../../const.js';
-import { OffersByType } from '../../mock/mock-data.js';
-import { generateDestination } from '../../mock/destination.js';
 import { createEventFormOffersTemplate } from './event-form-offers.js';
 import { createEventFormDestinationTemplate } from './event-form-destination.js';
 import dayjs from 'dayjs';
@@ -16,6 +14,7 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
   const valueFinishTime = dayjs(dateTo).format('YY/MM/DD HH:MM');
 
   const typeCities = destinations.map((item) => item.name);
+
 
   const isSubmitDisabled = valueStartTime > valueFinishTime ? 'disabled' : '';
   const isOffersElement = offers.length !== 0 ? createEventFormOffersTemplate(data) : '';
@@ -175,7 +174,7 @@ export default class EventForm extends SmartView {
     evt.preventDefault();
     this.updateData({
       type: evt.target.value,
-      offers: OffersByType[evt.target.value],
+      offers: this._offers.find((offer) => offer.type === evt.target.value).offers,
     });
   }
 
@@ -189,9 +188,9 @@ export default class EventForm extends SmartView {
       inputValue.setCustomValidity('');
       this.updateData({
         destination: {
-          description: generateDestination().description,
+          description: this._destinations.find((destination) => destination.name === city).description,
           name: city,
-          pictures: generateDestination().pictures,
+          pictures: this._destinations.find((destination) => destination.name === city).pictures,
         },
       });
     }
@@ -300,8 +299,3 @@ export default class EventForm extends SmartView {
     return data;
   }
 }
-
-// вместо citypoints this._destinations.map((it) => it.name))
-
-// description: this._destinations.filter((destination) => evt.target.value === destination.name)[0].description,
-// pictures: this._destinations.filter((destination) => evt.target.value === destination.name)[0].pictures,

@@ -13,15 +13,7 @@ const moneyChart = (moneyCtx, points) => {
       new Map),
   );
 
-  const sortMap = map.sort((a, b) => {
-    if (a[1] < b[1]) {
-      return 1;
-    }
-    if (a[1] > b[1]) {
-      return -1;
-    }
-    return 0;
-  });
+  const sortMap = map.sort((a, b) => b[1] - a[1]);
 
   const types = sortMap
     .slice()
@@ -111,15 +103,7 @@ const typeChart = (typeCtx, points) => {
       new Map),
   );
 
-  const sortMap = map.sort((a, b) => {
-    if (a[1] < b[1]) {
-      return 1;
-    }
-    if (a[1] > b[1]) {
-      return -1;
-    }
-    return 0;
-  });
+  const sortMap = map.sort((a, b) => b[1] - a[1]);
 
   const types = sortMap
     .slice()
@@ -209,15 +193,7 @@ const timeChart = (timeCtx, points) => {
       new Map),
   );
 
-  const sortMap = map.sort((a, b) => {
-    if (a[1] < b[1]) {
-      return 1;
-    }
-    if (a[1] > b[1]) {
-      return -1;
-    }
-    return 0;
-  });
+  const sortMap = map.sort((a, b) => b[1] - a[1]);
 
   const types = sortMap
     .slice()
