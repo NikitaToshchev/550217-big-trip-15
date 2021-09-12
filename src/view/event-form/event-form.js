@@ -14,8 +14,6 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
   const valueFinishTime = dayjs(dateTo).format('YY/MM/DD HH:MM');
 
   const typeCities = destinations.map((item) => item.name);
-
-
   const isSubmitDisabled = valueStartTime > valueFinishTime ? 'disabled' : '';
   const isOffersElement = offers.length !== 0 ? createEventFormOffersTemplate(data) : '';
   const isDestinationElement = Object.keys(destination).length !== 0 ? createEventFormDestinationTemplate(data) : '';
