@@ -13,10 +13,13 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
   const valueStartTime = dayjs(dateFrom).format('YY/MM/DD HH:MM');
   const valueFinishTime = dayjs(dateTo).format('YY/MM/DD HH:MM');
 
+  const offersByType = allOffers.find((offer) => offer.type === type).offers;
   const typeCities = destinations.map((item) => item.name);
   const isSubmitDisabled = valueStartTime > valueFinishTime ? 'disabled' : '';
-  const isOffersElement = offers.length !== 0 ? createEventFormOffersTemplate(data) : '';
-  const isDestinationElement = Object.keys(destination).length !== 0 ? createEventFormDestinationTemplate(data) : '';
+
+  const isOffersElement = offersByType.length !== 0 ? createEventFormOffersTemplate(id, offers, offersByType) : '';
+  const isDestinationElement = destination.name.length !== 0 ? createEventFormDestinationTemplate(destination) : '';
+
   const isRollupButton = isEditForm ? '<button class="event__rollup-btn" type="button">' : '';
 
   return `<form class="event event--edit" action="#" method="post">
@@ -84,28 +87,14 @@ const BLANK_POINT = {
   id: nanoid(),
   type: 'taxi',
   destination: {
-    description: 'Chamonix, is a beautiful city, a true asian pearl, with crowded streets.',
-    name: 'Chamonix',
-    pictures: [
-      {
-        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
-        description: 'Chamonix parliament building',
-      },
-    ],
+    description: '',
+    name: '',
+    pictures: [],
   },
   dateFrom: new Date(),
   dateTo: new Date(),
   basePrice: 1,
-  offers: [
-    {
-      title: 'Upgrade to a business class',
-      price: 120,
-    },
-    {
-      title: 'Choose the radio station',
-      price: 60,
-    },
-  ],
+  offers: [],
 };
 
 export default class EventForm extends SmartView {
@@ -127,6 +116,7 @@ export default class EventForm extends SmartView {
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._startTimeHandler = this._startTimeHandler.bind(this);
     this._endTimeHandler = this._endTimeHandler.bind(this);
+    this._offersСhangeHandler = this._offersСhangeHandler.bind(this);
 
     this._setInnerHandelers();
   }
@@ -150,6 +140,9 @@ export default class EventForm extends SmartView {
     this.getElement().querySelector('.event__type-group').addEventListener('change', this._typeChangeHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._cityChangeHandler);
     this.getElement().querySelector('.event__input--price').addEventListener('change', this._priceInputHandler);
+    if (this.getElement().querySelector('.event__available-offers')) {
+      this.getElement().querySelector('.event__available-offers').addEventListener('change', this._offersСhangeHandler);
+    }
 
     this._setDatePicker();
   }
@@ -271,6 +264,25 @@ export default class EventForm extends SmartView {
       this._datepickerEnd.destroy();
       this._datepickerEnd = null;
     }
+  }
+
+  _offersСhangeHandler(evt) {
+    evt.preventDefault();
+    const checkboxes = [...this.getElement().querySelectorAll('.event__offer-checkbox')];
+    const checkedCheckboxes = [];
+
+    checkboxes.forEach((checkbox) => {
+      if (checkbox.checked) {
+        checkedCheckboxes.push({
+          title: checkbox.dataset.title,
+          price: checkbox.dataset.price,
+        });
+      }
+    });
+
+    this.updateData({
+      offers: checkedCheckboxes,
+    });
   }
 
   setRollupBtnClickHandler(callback) {

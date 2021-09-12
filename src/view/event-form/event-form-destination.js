@@ -1,6 +1,4 @@
-export const createEventFormDestinationTemplate = (point) => {
-  const { destination } = point;
-
+export const createEventFormDestinationTemplate = (destination) => {
   const createPicturesTemplate = () => (
     `<div class="event__photos-container">
         <div class="event__photos-tape">

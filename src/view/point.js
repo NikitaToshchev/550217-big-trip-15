@@ -3,11 +3,13 @@ import { getDurationTime, getDurationDiff } from '../utils/date.js';
 import AbstractView from './abstract.js';
 
 const createPointOffersListTemplate = (offers) => (
-  `<ul class="event__selected-offers">
-  ${offers.map((offer) => (`<li class="event__offer">
-      <span class="event__offer-title">${offer.title}</span>
+
+  `<h4 class="visually-hidden">Offers:</h4>
+  <ul class="event__selected-offers">
+  ${offers.map(({ title, price }) => (`<li class="event__offer">
+      <span class="event__offer-title">${title}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
+      <span class="event__offer-price">${price}</span>
     </li>`)).join('')}
   </ul>`
 );
@@ -42,7 +44,6 @@ const createPointTemplate = (point) => {
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
-      <h4 class="visually-hidden">Offers:</h4>
       ${offersList}
       <button class="event__favorite-btn ${favoriteClassName}" type="button">
         <span class="visually-hidden">Add to favorite</span>
