@@ -277,7 +277,7 @@ export default class EventForm extends SmartView {
       if (checkbox.checked) {
         checkedCheckboxes.push({
           title: checkbox.dataset.title,
-          price: checkbox.dataset.price,
+          price: +checkbox.dataset.price,
         });
       }
     });
