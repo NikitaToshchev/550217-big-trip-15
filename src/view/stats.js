@@ -124,7 +124,7 @@ const renderChart = (chartCtx, points, title) => {
       },
       title: {
         display: true,
-        text: 'MONEY',
+        text: title,
         fontColor: '#000000',
         fontSize: 23,
         position: 'left',

@@ -15,7 +15,7 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
 
   const offersByType = allOffers.find((offer) => offer.type === type).offers;
   const typeCities = destinations.map((item) => item.name);
-  const isSubmitDisabled = valueStartTime > valueFinishTime ? 'disabled' : '';
+  const isSubmitDisabled = valueStartTime > valueFinishTime || !destination.name ? 'disabled' : '';
 
   const isOffersElement = offersByType.length !== 0 ? createEventFormOffersTemplate(id, offers, offersByType) : '';
   const isDestinationElement = destination.name.length !== 0 ? createEventFormDestinationTemplate(destination) : '';
@@ -165,7 +165,6 @@ export default class EventForm extends SmartView {
     evt.preventDefault();
     this.updateData({
       type: evt.target.value,
-      offers: this._offers.find((offer) => offer.type === evt.target.value).offers,
     });
   }
 
@@ -173,7 +172,8 @@ export default class EventForm extends SmartView {
     evt.preventDefault();
     const city = evt.target.value;
     const inputValue = this.getElement().querySelector('.event__input--destination');
-    if (!city || !matchCity(city, this._destinations.map((it) => it.name))) {
+    const typeCities = this._destinations.map((it) => it.name);
+    if (!city || !matchCity(city, typeCities)) {
       inputValue.setCustomValidity('Сhoose a city from the list');
     } else {
       inputValue.setCustomValidity('');
@@ -287,7 +287,10 @@ export default class EventForm extends SmartView {
 
   setRollupBtnClickHandler(callback) {
     this._callback.rollupBtnClick = callback;
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollupBtnClickHandler);
+    if (this.getElement().querySelector('.event__rollup-btn')) {
+
+      this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollupBtnClickHandler);
+    }
   }
 
   setFormSubmitHandler(callback) {
