@@ -67,3 +67,9 @@ export const PointTypes = {
   SIGHTSEEING: 'sightseeing',
   RESTAURANT: 'restaurant',
 };
+
+export const EndPoints = {
+  POINTS: 'points',
+  OFFERS: 'offers',
+  DESTINATIONS: 'destinations',
+};
