@@ -11,7 +11,7 @@ import FilterModel from './model/filter.js';
 import OffersModel from './model/offers.js';
 import DestinationsModel from './model/destinations.js';
 
-const AUTHORIZATION = 'Basic WegZnquFPYmp23n';
+const AUTHORIZATION = 'Basic WegZnquFPYmp22n';
 const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
 
 const api = new Api(END_POINT, AUTHORIZATION);

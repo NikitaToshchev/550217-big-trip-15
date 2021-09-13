@@ -134,6 +134,7 @@ export default class EventForm extends SmartView {
     this._setInnerHandelers();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setRollupBtnClickHandler(this._callback.rollupBtnClick);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   _setInnerHandelers() {
@@ -165,6 +166,7 @@ export default class EventForm extends SmartView {
     evt.preventDefault();
     this.updateData({
       type: evt.target.value,
+      offers: [],
     });
   }
 
