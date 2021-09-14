@@ -7,7 +7,7 @@ import flatpickr from 'flatpickr';
 import '../../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { matchCity } from '../../utils/common.js';
 
-const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) => {
+const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm, isDisabled, isSaving, isDeleting) => {
   const { id, type, basePrice, dateTo, dateFrom, offers, destination } = data;
   const valueStartTime = dayjs(dateFrom).format('YY/MM/DD HH:MM');
   const valueFinishTime = dayjs(dateTo).format('YY/MM/DD HH:MM');
@@ -19,7 +19,17 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
   const isOffersElement = offersByType.length !== 0 ? createEventFormOffersTemplate(id, offers, offersByType) : '';
   const isDestinationElement = destination.name.length !== 0 ? createEventFormDestinationTemplate(destination) : '';
 
-  const isRollupButton = isEditForm ? '<button class="event__rollup-btn" type="button">' : '';
+  const createEventRollupBtn = `${isEditForm ? `<button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
+  <span class="visually-hidden">Open event</span>
+</button>`: ''}`;
+
+  const createEventResetBtnName = (isEditFormFlag, isDeletingFlag) => {
+    if (!isEditFormFlag) {
+      return 'Cancel';
+    }
+
+    return (isDeletingFlag) ? 'Deleting...' : 'Delete';
+  };
 
   return `<form class="event event--edit" action="#" method="post">
   <header class="event__header">
@@ -69,11 +79,9 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
       <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}">
     </div>
 
-    <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled}>Save</button>
-    <button class="event__reset-btn" type="reset">${isEditForm ? 'Delete' : 'Cancel'}</button>
-    ${isRollupButton}
-      <span class="visually-hidden">Open event</span>
-    </button>
+    <button class="event__save-btn  btn  btn--blue" type="submit" ${isSaving ? 'Saving...' : 'Save'} ${isSubmitDisabled}>Save</button>
+    <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${createEventResetBtnName(isEditForm, isDeleting)}</button>
+    ${createEventRollupBtn}
   </header>
   <section class="event__details">
   ${isOffersElement}
@@ -305,11 +313,20 @@ export default class EventForm extends SmartView {
   }
 
   static parsePointToData(point) {
-    return Object.assign({}, point);
+    return Object.assign({}, point, {
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    });
   }
 
   static parseDataToPoint(data) {
     data = Object.assign({}, data);
+
+    delete data.isDisabled;
+    delete data.isSaving;
+    delete data.isDeleting;
+
     return data;
   }
 }

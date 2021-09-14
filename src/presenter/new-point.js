@@ -70,4 +70,11 @@ export default class NewPoint {
   _handleDeleteClick() {
     this.destroy();
   }
+
+  setSaving() {
+    this._eventFormComponent.updateData({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
 }

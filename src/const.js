@@ -73,3 +73,8 @@ export const EndPoints = {
   OFFERS: 'offers',
   DESTINATIONS: 'destinations',
 };
+
+export const State = {
+  SAVING: 'SAVING',
+  DELETING: 'DELETING',
+};

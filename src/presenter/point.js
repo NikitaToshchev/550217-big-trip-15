@@ -2,7 +2,7 @@ import { RenderPosition, render, replace, remove } from '../utils/render.js';
 import PointView from '../view/point.js';
 import EventFormView from '../view/event-form/event-form.js';
 import ListItemView from '../view/list-item.js';
-import { Mode, UserAction, UpdateType } from '../const.js';
+import { Mode, UserAction, UpdateType, State } from '../const.js';
 
 export default class Point {
   constructor(pointListContainer, changeData, changeMode) {
@@ -50,7 +50,8 @@ export default class Point {
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._eventFormComponent, prevEventFormEditComponent);
+      replace(this._pointComponent, prevEventFormEditComponent);
+      this._mode === Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
@@ -61,6 +62,27 @@ export default class Point {
     remove(this._pointComponent);
     remove(this._eventFormComponent);
     remove(this._listItemComponent);
+  }
+
+  setViewState(state) {
+    if (this._mode === Mode.DEFAULT) {
+      return;
+    }
+
+    switch (state) {
+      case State.SAVING:
+        this._eventFormComponent.updateData({
+          isDisabled: true,
+          isSaving: true,
+        });
+        break;
+      case State.DELETING:
+        this._eventFormComponent.updateData({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+    }
   }
 
   _replacePointToForm() {
