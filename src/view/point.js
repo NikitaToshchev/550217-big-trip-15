@@ -1,7 +1,18 @@
 import dayjs from 'dayjs';
 import { getDurationTime, getDurationDiff } from '../utils/date.js';
-import { createPointOffersListTemplate } from './point-offers.js';
 import AbstractView from './abstract.js';
+
+const createPointOffersListTemplate = (offers) => (
+
+  `<h4 class="visually-hidden">Offers:</h4>
+  <ul class="event__selected-offers">
+  ${offers.map(({ title, price }) => (`<li class="event__offer">
+      <span class="event__offer-title">${title}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${price}</span>
+    </li>`)).join('')}
+  </ul>`
+);
 
 const createPointTemplate = (point) => {
   const { type, destination, basePrice, dateTo, dateFrom, isFavorite, offers } = point;
@@ -33,7 +44,6 @@ const createPointTemplate = (point) => {
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
-      <h4 class="visually-hidden">Offers:</h4>
       ${offersList}
       <button class="event__favorite-btn ${favoriteClassName}" type="button">
         <span class="visually-hidden">Add to favorite</span>
