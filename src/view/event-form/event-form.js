@@ -6,7 +6,6 @@ import SmartView from '../smart.js';
 import flatpickr from 'flatpickr';
 import '../../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { matchCity } from '../../utils/common.js';
-import { nanoid } from 'nanoid';
 
 const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) => {
   const { id, type, basePrice, dateTo, dateFrom, offers, destination } = data;
@@ -84,7 +83,6 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
 };
 
 const BLANK_POINT = {
-  id: nanoid(),
   type: 'taxi',
   destination: {
     description: '',
