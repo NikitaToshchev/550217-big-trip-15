@@ -2,7 +2,6 @@ import { RenderPosition, render, remove } from '../utils/render.js';
 import EventFormView from '../view/event-form/event-form.js';
 import ListItemView from '../view/list-item.js';
 import { UserAction, UpdateType } from '../const.js';
-import { nanoid } from 'nanoid';
 
 export default class NewPoint {
   constructor(pointListContainer, changeData) {
@@ -55,7 +54,7 @@ export default class NewPoint {
     this._changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      Object.assign({ id: nanoid() }, newPoint),
+      newPoint,
     );
 
     this.destroy();

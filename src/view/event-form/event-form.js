@@ -93,6 +93,7 @@ const BLANK_POINT = {
   dateTo: new Date(),
   basePrice: 1,
   offers: [],
+  isFavorite: false,
 };
 
 export default class EventForm extends SmartView {
