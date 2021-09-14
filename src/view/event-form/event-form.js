@@ -7,8 +7,8 @@ import flatpickr from 'flatpickr';
 import '../../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { matchCity } from '../../utils/common.js';
 
-const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm, isDisabled, isSaving, isDeleting) => {
-  const { id, type, basePrice, dateTo, dateFrom, offers, destination } = data;
+const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) => {
+  const { id, type, basePrice, dateTo, dateFrom, offers, destination, isDisabled, isSaving, isDeleting } = data;
   const valueStartTime = dayjs(dateFrom).format('YY/MM/DD HH:MM');
   const valueFinishTime = dayjs(dateTo).format('YY/MM/DD HH:MM');
 

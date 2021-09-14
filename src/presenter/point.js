@@ -69,6 +69,14 @@ export default class Point {
       return;
     }
 
+    const resetFormState = () => {
+      this._eventFormComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
     switch (state) {
       case State.SAVING:
         this._eventFormComponent.updateData({
@@ -81,6 +89,11 @@ export default class Point {
           isDisabled: true,
           isDeleting: true,
         });
+        break;
+
+      case State.ABORTING:
+        this._pointComponent.shake(resetFormState);
+        this._eventFormComponent.shake(resetFormState);
         break;
     }
   }
@@ -127,7 +140,7 @@ export default class Point {
       UpdateType.MINOR,
       update,
     );
-    this._replaceFormToPoint();
+    // this._replaceFormToPoint();
   }
 
   _handleFavoriteClick() {

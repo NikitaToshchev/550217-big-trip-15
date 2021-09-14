@@ -57,7 +57,7 @@ export default class NewPoint {
       newPoint,
     );
 
-    this.destroy();
+    // this.destroy();
   }
 
   _escKeyDownHandler(evt) {
@@ -76,5 +76,17 @@ export default class NewPoint {
       isDisabled: true,
       isSaving: true,
     });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._eventFormComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this._eventFormComponent.shake(resetFormState);
   }
 }
