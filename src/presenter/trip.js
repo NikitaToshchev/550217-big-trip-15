@@ -175,13 +175,12 @@ export default class Trip {
     const points = this._pointsModel.getPoints();
     const filteredPoints = filter[this._filterType](points);
 
-    this.renderTripHeader();
-
-    if (filteredPoints.length === 0) {
+    if (!filteredPoints.length) {
       this._renderListEmpty();
       return;
     }
 
+    this.renderTripHeader();
     this._renderSort();
     this._renderList();
     this._renderPoints();

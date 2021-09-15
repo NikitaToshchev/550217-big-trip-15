@@ -11,7 +11,7 @@ import FilterModel from './model/filter.js';
 import OffersModel from './model/offers.js';
 import DestinationsModel from './model/destinations.js';
 
-const AUTHORIZATION = 'Basic xegznquFPYmp22n';
+const AUTHORIZATION = 'Basic xegznq1FPYmp22n';
 
 const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
 
@@ -23,8 +23,8 @@ const eventsElement = document.querySelector('.trip-events');
 const filtersElement = document.querySelector('.trip-controls__filters');
 const addNewPointButton = document.querySelector('.trip-main__event-add-btn');
 
-const menuComponent = new MenuView();
 const pointsModel = new PointsModel();
+const menuComponent = new MenuView();
 const filterModel = new FilterModel();
 const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();
@@ -89,13 +89,14 @@ Promise.all([
 ])
   .then((values) => {
     const [destinations, offers, points] = values;
-
     destinationsModel.setDestinations(UpdateType.INIT, destinations);
     offersModel.setOffers(UpdateType.INIT, offers);
     pointsModel.setPoints(UpdateType.INIT, points);
     [...filtersElement.querySelectorAll('.trip-filters__filter-input')].map((input) => input.disabled = false);
     filterPresenter.init();
     render(navigationElement, menuComponent, RenderPosition.BEFOREEND);
+    // render(navigationElement, new MenuView(pointsModel.getPoints()), RenderPosition.BEFOREEND);
+
     menuComponent.setMenuClickHandler(handleSiteMenuClick);
     addNewPointButton.disabled = false;
   })
