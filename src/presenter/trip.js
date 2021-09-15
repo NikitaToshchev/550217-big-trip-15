@@ -1,5 +1,5 @@
 import { RenderPosition, render, remove } from '../utils/render.js';
-import { sortPrice } from '../utils/common.js';
+import { sortPrice, sortDay } from '../utils/common.js';
 import { sortTimeDuration } from '../utils/date.js';
 
 import InfoView from '../view/info.js';
@@ -82,7 +82,7 @@ export default class Trip {
       case SortType.PRICE.name:
         return filteredPoints.sort(sortPrice);
       default:
-        return filteredPoints.sort((pointA, pointB) => pointA.dateFrom - pointB.dateFrom);
+        return filteredPoints.sort(sortDay);
     }
   }
 
@@ -92,8 +92,8 @@ export default class Trip {
     }
 
     this._sortComponent = new SortView(SortType, this._currentSortType);
-    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
     render(this._tripContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderListEmpty() {

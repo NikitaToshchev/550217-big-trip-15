@@ -1,5 +1,7 @@
 export const sortPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 
+export const sortDay = (pointA, pointB) => pointA.dateFrom - pointB.dateFrom;
+
 export const matchCity = (city, array) => array.some((it) => it === city);
 
 export const getRandomNum = (min, max, precision) => {
