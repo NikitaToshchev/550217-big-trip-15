@@ -1,6 +1,8 @@
 export const sortPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 
-export const sortDay = (pointA, pointB) => pointA.dateFrom - pointB.dateFrom;
+// export const sortDay = (pointA, pointB) => pointA.dateFrom - pointB.dateFrom;
+
+export const sortDay = (a, b) => (a.dateFrom < b.dateFrom) ? -1 : ((a.dateFrom > b.dateFrom) ? 1 : 0);
 
 export const matchCity = (city, array) => array.some((it) => it === city);
 
