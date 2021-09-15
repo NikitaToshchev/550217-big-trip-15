@@ -180,13 +180,17 @@ export default class Trip {
       return;
     }
 
-    this.renderTripHeader();
+    this.renderTripHeader(points);
     this._renderSort();
     this._renderList();
     this._renderPoints();
   }
 
-  renderTripHeader() {
+  renderTripHeader(points) {
+    if (!points) {
+      return;
+    }
+
     this._renderInfo();
     this._renderInfoMain();
     this._renderTotalCost();
