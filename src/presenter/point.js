@@ -90,7 +90,6 @@ export default class Point {
           isDeleting: true,
         });
         break;
-
       case State.ABORTING:
         this._pointComponent.shake(resetFormState);
         this._eventFormComponent.shake(resetFormState);

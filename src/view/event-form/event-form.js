@@ -79,7 +79,7 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
       <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}">
     </div>
 
-    <button class="event__save-btn  btn  btn--blue" type="submit" ${isSaving ? 'Saving...' : 'Save'} ${isSubmitDisabled}>Save</button>
+    <button class="event__save-btn  btn  btn--blue" type="submit"${isSubmitDisabled}> ${isSaving ? 'Saving...' : 'Save'}</button>
     <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${createEventResetBtnName(isEditForm, isDeleting)}</button>
     ${createEventRollupBtn}
   </header>

@@ -222,7 +222,7 @@ export default class Trip {
             this._pointsModel.addPoint(updateType, response);
           })
           .catch(() => {
-            this._taskNewPresenter.setAborting();
+            this._newPointPresenter.setAborting();
           });
         break;
       case UserAction.DELETE_POINT:
