@@ -20,13 +20,15 @@ const createMenuTemplate = () => (
 );
 
 export default class Menu extends AbstractView {
-  constructor() {
+  constructor(points) {
     super();
+    this._points = points;
     this._menuClickHandler = this._menuClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createMenuTemplate();
+    // return createMenuTemplate(this._points);
+    return createMenuTemplate(this._points);
   }
 
   _menuClickHandler(evt) {

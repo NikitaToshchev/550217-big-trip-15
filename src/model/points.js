@@ -1,5 +1,4 @@
 import AbstractObserver from '../utils/abstract-observer.js';
-import { sortDay } from '../utils/common.js';
 
 export default class Points extends AbstractObserver {
   constructor() {
@@ -14,7 +13,7 @@ export default class Points extends AbstractObserver {
   }
 
   getPoints() {
-    return this._points.sort(sortDay);
+    return this._points;
   }
 
   updatePoint(updateType, update) {

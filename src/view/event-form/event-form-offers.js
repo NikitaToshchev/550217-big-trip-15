@@ -9,8 +9,8 @@ export const createEventFormOffersTemplate = (id, offers, offersByType) => {
 
      <div class="event__available-offers">
      ${offersByType.map(({ title, price }) => (`<div class="event__offer-selector">
-         <input class="event__offer-checkbox  visually-hidden" data-title="${title}" data-price="${price}" id="event-offer-${title.split(' ').pop()}-${id}" type="checkbox" name="event-offer-${title.split(' ').pop()}" ${isCheckedOffer(title)}>
-         <label class="event__offer-label" for="event-offer-${title.split(' ').pop()}-${id}">
+         <input class="event__offer-checkbox  visually-hidden" data-title="${title}" data-price="${price}" id="event-offer-${title}-${id}" type="checkbox" name="event-offer-${title}" ${isCheckedOffer(title)}>
+         <label class="event__offer-label" for="event-offer-${title}-${id}">
            <span class="event__offer-title">${title}</span>
            &plus;&euro;&nbsp;
            <span class="event__offer-price">${price}</span>
