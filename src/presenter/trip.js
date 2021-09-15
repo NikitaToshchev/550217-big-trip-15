@@ -65,6 +65,11 @@ export default class Trip {
     this._offers = this._offersModel.getOffers();
     this._destinations = this._destinationsModel.getDestinations();
 
+    if (this._listEmptyComponent !== null) {
+      remove(this._listEmptyComponent);
+      this._renderList();
+    }
+
     this._currentSortType = SortType.DAY.name;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this._newPointPresenter = new NewPointPresenter(this._listComponent, this._handleViewAction);
