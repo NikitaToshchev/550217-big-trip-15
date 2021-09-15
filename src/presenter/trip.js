@@ -83,9 +83,9 @@ export default class Trip {
 
     switch (this._currentSortType) {
       case SortType.TIME.name:
-        return filteredPoints.sort(sortTimeDuration);
+        return filteredPoints.slice().sort(sortTimeDuration);
       case SortType.PRICE.name:
-        return filteredPoints.sort(sortPrice);
+        return filteredPoints.slice().sort(sortPrice);
       default:
         return filteredPoints.sort(sortDay);
     }

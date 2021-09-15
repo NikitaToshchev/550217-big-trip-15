@@ -2,13 +2,12 @@ import AbstractView from './abstract.js';
 import { MenuItem } from '../const.js';
 
 // const disabledLinkStyle = 'style="pointer-events: none; opacity:0.5"';
-
-// const isDasabled = (points) => !points.length ? disabledLinkStyle : '';
+// const getDisabled = (points) => !points.length ? disabledLinkStyle : '';
 
 // const createMenuTemplate = (points) => (
 //   `<nav class="trip-controls__trip-tabs trip-tabs">
 //     <a class="trip-tabs__btn trip-tabs__btn--active" data-menu="${MenuItem.TABLE}" href="#">Table</a>
-//     <a class="trip-tabs__btn" data-menu="${MenuItem.STATS}" href="#" ${isDasabled(points)} >Stats</a>
+//     <a class="trip-tabs__btn" data-menu="${MenuItem.STATS}" href="#" ${getDisabled(points)} >Stats</a>
 //   </nav>`
 // );
 
@@ -27,7 +26,7 @@ export default class Menu extends AbstractView {
   }
 
   getTemplate() {
-    // return createMenuTemplate(this._points);
+    // return createMenuTemplate();
     return createMenuTemplate(this._points);
   }
 
