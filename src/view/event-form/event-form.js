@@ -14,7 +14,10 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
 
   const offersByType = allOffers.find((offer) => offer.type === type).offers;
   const typeCities = destinations.map((item) => item.name);
-  const isSubmitDisabled = valueStartTime > valueFinishTime || !destination.name ? 'disabled' : '';
+
+  const isSubmitSaving = isSaving ? 'Saving...' : 'Save';
+  const isInputDisabled = isDisabled ? 'disabled' : '';
+  const isSubmitDisabled = valueStartTime > valueFinishTime || !destination.name || isDisabled ? 'disabled' : '';
 
   const isOffersElement = offersByType.length !== 0 ? createEventFormOffersTemplate(id, offers, offersByType) : '';
   const isDestinationElement = destination.name.length !== 0 ? createEventFormDestinationTemplate(destination) : '';
@@ -45,7 +48,7 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
           <legend class="visually-hidden">Event type</legend>
 
           ${Object.values(PointTypes).map((pointType) => (`<div class="event__type-item">
-          <input id="event-type-${pointType}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}">
+          <input id="event-type-${pointType}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}" ${isInputDisabled}>
           <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-${id}">${pointType}</label>
         </div>`)).join('\n')}
         </fieldset>
@@ -56,7 +59,7 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
       <label class="event__label  event__type-output" for="event-destination-${id}">
         ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${id}">
+      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${id}" ${isInputDisabled}>
       <datalist id="destination-list-${id}">
       ${typeCities.map((cityPoint) => (
     `<option value="${cityPoint}"></option>`)).join('\n')}
@@ -65,10 +68,10 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
 
     <div class="event__field-group  event__field-group--time">
       <label class="visually-hidden" for="event-start-time-${id}">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${valueStartTime}">
+      <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${valueStartTime}" ${isInputDisabled}>
       &mdash;
       <label class="visually-hidden" for="event-end-time-${id}">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${valueFinishTime}">
+      <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${valueFinishTime}" ${isInputDisabled}>
     </div>
 
     <div class="event__field-group  event__field-group--price">
@@ -76,11 +79,11 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}">
+      <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}" ${isInputDisabled}>
     </div>
 
-    <button class="event__save-btn  btn  btn--blue" type="submit"${isSubmitDisabled}> ${isSaving ? 'Saving...' : 'Save'}</button>
-    <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${createEventResetBtnName(isEditForm, isDeleting)}</button>
+    <button class="event__save-btn  btn  btn--blue" type="submit"${isSubmitDisabled}> ${isSubmitSaving}</button>
+    <button class="event__reset-btn" type="reset" ${isInputDisabled}>${createEventResetBtnName(isEditForm, isDeleting)}</button>
     ${createEventRollupBtn}
   </header>
   <section class="event__details">

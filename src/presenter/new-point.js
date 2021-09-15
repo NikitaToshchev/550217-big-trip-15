@@ -50,7 +50,6 @@ export default class NewPoint {
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
-  // тут все верно
   _handleFormSubmit(newPoint) {
     this._changeData(
       UserAction.ADD_POINT,
@@ -70,14 +69,12 @@ export default class NewPoint {
     this.destroy();
   }
 
-  // тут все верно
   setSaving() {
     this._eventFormComponent.updateData({
       isDisabled: true,
       isSaving: true,
     });
   }
-  // тут все верно
 
   setAborting() {
     const resetFormState = () => {
