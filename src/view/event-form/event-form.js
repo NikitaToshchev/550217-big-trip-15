@@ -1,4 +1,3 @@
-import { PointTypes } from '../../const.js';
 import { createEventFormOffersTemplate } from './event-form-offers.js';
 import { createEventFormDestinationTemplate } from './event-form-destination.js';
 import dayjs from 'dayjs';
@@ -14,6 +13,7 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
 
   const offersByType = allOffers.find((offer) => offer.type === type).offers;
   const typeCities = destinations.map((item) => item.name);
+  const typePoints = allOffers.map((item) => item.type);
 
   const getSubmitSaving = isSaving ? 'Saving...' : 'Save';
   const getInputDisabled = isDisabled ? 'disabled' : '';
@@ -47,7 +47,7 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Event type</legend>
 
-          ${Object.values(PointTypes).map((pointType) => (`<div class="event__type-item">
+          ${typePoints.map((pointType) => (`<div class="event__type-item">
           <input id="event-type-${pointType}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}" ${getInputDisabled}>
           <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-${id}">${pointType}</label>
         </div>`)).join('\n')}
