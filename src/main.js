@@ -60,7 +60,7 @@ const handleSiteMenuClick = (menuItem) => {
         remove(statsComponent);
         statsComponent = null;
         currentMenuItem = MenuItem.TABLE;
-        [...filtersElement.querySelectorAll('.trip-filters__filter-input')].map((input) => input.disabled = false);
+        filterPresenter.init();
         addNewPointButton.disabled = false;
         menuComponent.setMenuItem(MenuItem.TABLE);
       }
