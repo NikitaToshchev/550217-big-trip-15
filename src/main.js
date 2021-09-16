@@ -11,8 +11,8 @@ import FilterModel from './model/filter.js';
 import OffersModel from './model/offers.js';
 import DestinationsModel from './model/destinations.js';
 
-const AUTHORIZATION = 'Basic xegznq2FPYmp12n';
-// const AUTHORIZATION = 'Basic xegznq2FPYmp22n'; // пустые точки
+// const AUTHORIZATION = 'Basic xegznq2FPYmp12n';
+const AUTHORIZATION = 'Basic xegznq2FPYmp22n'; // пустые точки
 const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
 
 const api = new Api(END_POINT, AUTHORIZATION);
@@ -68,8 +68,8 @@ const handleSiteMenuClick = (menuItem) => {
     case MenuItem.STATS:
       if (currentMenuItem !== MenuItem.STATS) {
         tripPresenter.destroy();
-        tripPresenter.renderTripHeader();
         statsComponent = new StatsView(pointsModel.getPoints());
+        tripPresenter.renderTripHeader();
         render(eventsElement, statsComponent, RenderPosition.BEFOREEND);
         currentMenuItem = MenuItem.STATS;
         [...filtersElement.querySelectorAll('.trip-filters__filter-input')].map((input) => input.disabled = true);

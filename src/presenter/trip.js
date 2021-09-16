@@ -180,14 +180,15 @@ export default class Trip {
       return;
     }
 
-    this.renderTripHeader(points);
+    this.renderTripHeader();
     this._renderSort();
     this._renderList();
     this._renderPoints();
   }
 
-  renderTripHeader(points) {
-    if (!points) {
+  renderTripHeader() {
+    const points = this._pointsModel.getPoints();
+    if (!points.length) {
       return;
     }
 
