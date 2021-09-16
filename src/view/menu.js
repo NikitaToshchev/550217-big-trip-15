@@ -32,7 +32,11 @@ export default class Menu extends AbstractView {
     const items = [...this.getElement().querySelectorAll('.trip-tabs__btn')];
 
     items.forEach((item) => {
-      (item.dataset.menu === menuItem) ? item.classList.add('trip-tabs__btn--active') : item.classList.remove('trip-tabs__btn--active');
+      if (item.dataset.menu === menuItem) {
+        item.classList.add('trip-tabs__btn--active');
+      } else {
+        item.classList.remove('trip-tabs__btn--active');
+      }
     });
   }
 }

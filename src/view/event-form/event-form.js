@@ -203,15 +203,14 @@ export default class EventForm extends SmartView {
   _priceInputHandler(evt) {
     evt.preventDefault();
     const inputValue = this.getElement().querySelector('.event__input--price');
-    const price = evt.target.value;
-    const priceNumber = Number(price);
+    const price = Number(evt.target.value);
 
-    if (!price || priceNumber < 0 || !priceNumber) {
+    if (!price || price < 0) {
       inputValue.setCustomValidity('The field must be filled with a positive number');
     } else {
       inputValue.setCustomValidity('');
       this.updateData({
-        basePrice: priceNumber,
+        basePrice: price,
       });
     }
 
