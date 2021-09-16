@@ -18,10 +18,10 @@ const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
 const api = new Api(END_POINT, AUTHORIZATION);
 
 const mainElement = document.querySelector('.trip-main');
-const navigationElement = document.querySelector('.trip-controls__navigation');
 const eventsElement = document.querySelector('.trip-events');
-const filtersElement = document.querySelector('.trip-controls__filters');
-const addNewPointButton = document.querySelector('.trip-main__event-add-btn');
+const navigationElement = mainElement.querySelector('.trip-controls__navigation');
+const filtersElement = mainElement.querySelector('.trip-controls__filters');
+const addNewPointButton = mainElement.querySelector('.trip-main__event-add-btn');
 
 const pointsModel = new PointsModel();
 const menuComponent = new MenuView();
