@@ -184,7 +184,7 @@ export default class EventForm extends SmartView {
     evt.preventDefault();
     const city = evt.target.value;
     const inputValue = this.getElement().querySelector('.event__input--destination');
-    const typeCities = this._destinations.map((it) => it.name);
+    const typeCities = this._destinations.map((destination) => destination.name);
     if (!city || !matchCity(city, typeCities)) {
       inputValue.setCustomValidity('Сhoose a city from the list');
     } else {

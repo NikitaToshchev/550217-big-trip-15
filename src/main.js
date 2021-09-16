@@ -11,7 +11,7 @@ import FilterModel from './model/filter.js';
 import OffersModel from './model/offers.js';
 import DestinationsModel from './model/destinations.js';
 
-// const AUTHORIZATION = 'Basic xegznq2FPYmp12n';
+// const AUTHORIZATION = 'Basic 1egznq2FPYmp121';
 const AUTHORIZATION = 'Basic xegznq2FPYmp22n'; // пустые точки
 const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
 
@@ -92,7 +92,6 @@ Promise.all([
     destinationsModel.setDestinations(UpdateType.INIT, destinations);
     offersModel.setOffers(UpdateType.INIT, offers);
     pointsModel.setPoints(UpdateType.INIT, points);
-    [...filtersElement.querySelectorAll('.trip-filters__filter-input')].map((input) => input.disabled = false);
     filterPresenter.init();
     addNewPointButton.disabled = false;
     render(navigationElement, menuComponent, RenderPosition.BEFOREEND);

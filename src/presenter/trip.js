@@ -32,7 +32,6 @@ export default class Trip {
     this._listComponent = new ListView();
     this._infoComponent = new InfoView();
     this._loadingComponet = new LoadingView();
-    this._newPointPresenter = new NewPointPresenter();
     this._infoMainComponent = null;
     this._totalCostComponent = null;
     this._sortComponent = null;
@@ -44,6 +43,8 @@ export default class Trip {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
+
+    this._newPointPresenter = new NewPointPresenter(this._listComponent, this._handleViewAction);
   }
 
   init() {
@@ -65,19 +66,16 @@ export default class Trip {
     this._offers = this._offersModel.getOffers();
     this._destinations = this._destinationsModel.getDestinations();
 
-    if (this._listEmptyComponent !== null) {
-      remove(this._listEmptyComponent);
-      this._renderList();
-    }
-
     this._currentSortType = SortType.DAY.name;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._newPointPresenter = new NewPointPresenter(this._listComponent, this._handleViewAction);
+    remove(this._listEmptyComponent);
+    this._renderList();
     this._newPointPresenter.init(callback, this._offers, this._destinations);
   }
 
   _getPoints() {
     this._filterType = this._filterModel.getFilter();
+
     const points = this._pointsModel.getPoints();
     const filteredPoints = filter[this._filterType](points);
 
@@ -102,10 +100,6 @@ export default class Trip {
   }
 
   _renderListEmpty() {
-    if (this._listEmptyComponent !== null) {
-      this._listEmptyComponent = null;
-    }
-
     this._listEmptyComponent = new ListEmptyView(this._filterType);
     render(this._tripContainer, this._listEmptyComponent, RenderPosition.BEFOREEND);
   }
@@ -132,7 +126,9 @@ export default class Trip {
   }
 
   _renderInfoMain() {
-    this._infoMainComponent = new InfoMainView(this._pointsModel.getPoints());
+    const points = this._pointsModel.getPoints().sort(sortDay);
+
+    this._infoMainComponent = new InfoMainView(points);
     render(this._infoComponent, this._infoMainComponent, RenderPosition.AFTERBEGIN);
   }
 

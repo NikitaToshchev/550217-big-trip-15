@@ -17,10 +17,6 @@ export default class NewPoint {
   }
 
   init(callback, offers, destinations) {
-    if (this._eventFormComponent !== null) {
-      return;
-    }
-
     this._destroyCallback = callback;
 
     this._listItemComponent = new ListItemView();
@@ -46,6 +42,7 @@ export default class NewPoint {
     remove(this._eventFormComponent);
     remove(this._listItemComponent);
     this._eventFormComponent === null;
+    this._listItemComponent === null;
 
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }

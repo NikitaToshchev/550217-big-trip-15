@@ -3,7 +3,6 @@ import { getDurationTime, getDurationDiff } from '../utils/date.js';
 import AbstractView from './abstract.js';
 
 const createPointOffersListTemplate = (offers) => (
-
   `<h4 class="visually-hidden">Offers:</h4>
   <ul class="event__selected-offers">
   ${offers.map(({ title, price }) => (`<li class="event__offer">
