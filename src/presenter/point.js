@@ -3,6 +3,7 @@ import PointView from '../view/point.js';
 import EventFormView from '../view/event-form/event-form.js';
 import ListItemView from '../view/list-item.js';
 import { Mode, UserAction, UpdateType, State } from '../const.js';
+import { isEscEvent } from '../utils/common.js';
 
 export default class Point {
   constructor(pointListContainer, changeData, changeMode) {
@@ -117,7 +118,7 @@ export default class Point {
   }
 
   _escKeyDownHandler(evt) {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (isEscEvent(evt)) {
       evt.preventDefault();
       this._eventFormComponent.reset(this._point);
       this._replaceFormToPoint();

@@ -2,6 +2,7 @@ import { RenderPosition, render, remove } from '../utils/render.js';
 import EventFormView from '../view/event-form/event-form.js';
 import ListItemView from '../view/list-item.js';
 import { UserAction, UpdateType } from '../const.js';
+import { isEscEvent } from '../utils/common.js';
 
 export default class NewPoint {
   constructor(pointListContainer, changeData) {
@@ -55,8 +56,9 @@ export default class NewPoint {
     );
   }
 
+
   _escKeyDownHandler(evt) {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (isEscEvent(evt)) {
       evt.preventDefault();
       this.destroy();
     }
