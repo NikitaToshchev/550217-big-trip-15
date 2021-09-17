@@ -1,15 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { getRandomNum } from './common.js';
 dayjs.extend(duration);
-
-export const generateDate = () => {
-  const maxDaysGap = 10;
-  const daysGap = getRandomNum(-maxDaysGap, maxDaysGap);
-  const minuteGap = getRandomNum(0, 50);
-
-  return dayjs().add(daysGap, 'day').add(minuteGap, 'minute').toDate();
-};
 
 export const getDurationDiff = (dateFrom, dateTo) => dayjs(dateTo).diff(dayjs(dateFrom));
 

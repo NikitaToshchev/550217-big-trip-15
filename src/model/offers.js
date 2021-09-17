@@ -12,6 +12,6 @@ export default class Filter extends AbstractObserver {
   }
 
   getOffers() {
-    return this._offers;
+    return this._offers.slice();
   }
 }

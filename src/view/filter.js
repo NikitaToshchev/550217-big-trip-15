@@ -1,13 +1,15 @@
 import AbstractView from './abstract.js';
 
-const isFilterChecked = (name, currentFilterType) => name.type === currentFilterType ? 'checked' : '';
+const getFilterChecked = (name, currentFilterType) => name.type === currentFilterType ? 'checked' : '';
+
+const getFilterDisabled = (count) => (count === 0) ? 'disabled' : '';
 
 const createFilterTemplate = (filters, currentFilterType) => (
   `<div class="trip-controls__filters">
     <h2 class="visually-hidden">Filter events</h2>
     <form class="trip-filters" action="#" method="get">
     ${filters.map((name) => (`<div class="trip-filters__filter">
-    <input id="filter-${name.type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${name.type}" ${isFilterChecked(name, currentFilterType)}>
+    <input id="filter-${name.type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${name.type}" ${getFilterChecked(name, currentFilterType)} ${getFilterDisabled(name.count)}>
     <label class="trip-filters__filter-label" for="filter-${name.type}">${name.type}</label>
   </div>`)).join('')}
       <button class="visually-hidden" type="submit">Accept filter</button>

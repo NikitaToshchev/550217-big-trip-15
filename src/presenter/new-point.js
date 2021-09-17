@@ -2,7 +2,6 @@ import { RenderPosition, render, remove } from '../utils/render.js';
 import EventFormView from '../view/event-form/event-form.js';
 import ListItemView from '../view/list-item.js';
 import { UserAction, UpdateType } from '../const.js';
-import { nanoid } from 'nanoid';
 
 export default class NewPoint {
   constructor(pointListContainer, changeData) {
@@ -18,10 +17,6 @@ export default class NewPoint {
   }
 
   init(callback, offers, destinations) {
-    if (this._eventFormComponent !== null) {
-      return;
-    }
-
     this._destroyCallback = callback;
 
     this._listItemComponent = new ListItemView();
@@ -47,6 +42,7 @@ export default class NewPoint {
     remove(this._eventFormComponent);
     remove(this._listItemComponent);
     this._eventFormComponent === null;
+    this._listItemComponent === null;
 
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
@@ -55,10 +51,8 @@ export default class NewPoint {
     this._changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      Object.assign({ id: nanoid() }, newPoint),
+      newPoint,
     );
-
-    this.destroy();
   }
 
   _escKeyDownHandler(evt) {
@@ -70,5 +64,24 @@ export default class NewPoint {
 
   _handleDeleteClick() {
     this.destroy();
+  }
+
+  setSaving() {
+    this._eventFormComponent.updateData({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._eventFormComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this._eventFormComponent.shake(resetFormState);
   }
 }

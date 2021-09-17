@@ -189,20 +189,11 @@ export default class Stats extends SmartView {
 
   removeElement() {
     super.removeElement();
-
-    if (this._renderMoneyChart !== null || this._renderTypeChart !== null || this._renderTimeChart !== null) {
-      this._renderMoneyChart = null;
-      this._renderTypeChart = null;
-      this._renderTimeChart = null;
-    }
+    this._clearCharts();
   }
 
   _setCharts() {
-    if (this._renderMoneyChart !== null || this._renderTypeChart !== null || this._renderTimeChart !== null) {
-      this._renderMoneyChart = null;
-      this._renderTypeChart = null;
-      this._renderTimeChart = null;
-    }
+    this._clearCharts();
 
     const moneyCtx = this.getElement().querySelector('#money');
     const typeCtx = this.getElement().querySelector('#type');
@@ -221,5 +212,13 @@ export default class Stats extends SmartView {
 
   restoreHandlers() {
     this._setCharts();
+  }
+
+  _clearCharts() {
+    if (this._renderMoneyChart !== null || this._renderTypeChart !== null || this._renderTimeChart !== null) {
+      this._renderMoneyChart = null;
+      this._renderTypeChart = null;
+      this._renderTimeChart = null;
+    }
   }
 }

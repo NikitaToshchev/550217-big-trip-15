@@ -1,4 +1,3 @@
-import { PointTypes } from '../../const.js';
 import { createEventFormOffersTemplate } from './event-form-offers.js';
 import { createEventFormDestinationTemplate } from './event-form-destination.js';
 import dayjs from 'dayjs';
@@ -6,21 +5,34 @@ import SmartView from '../smart.js';
 import flatpickr from 'flatpickr';
 import '../../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { matchCity } from '../../utils/common.js';
-import { nanoid } from 'nanoid';
 
 const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) => {
-  const { id, type, basePrice, dateTo, dateFrom, offers, destination } = data;
+  const { id, type, basePrice, dateTo, dateFrom, offers, destination, isDisabled, isSaving, isDeleting } = data;
   const valueStartTime = dayjs(dateFrom).format('YY/MM/DD HH:MM');
   const valueFinishTime = dayjs(dateTo).format('YY/MM/DD HH:MM');
 
   const offersByType = allOffers.find((offer) => offer.type === type).offers;
   const typeCities = destinations.map((item) => item.name);
-  const isSubmitDisabled = valueStartTime > valueFinishTime || !destination.name ? 'disabled' : '';
+  const typePoints = allOffers.map((item) => item.type);
 
-  const isOffersElement = offersByType.length !== 0 ? createEventFormOffersTemplate(id, offers, offersByType) : '';
-  const isDestinationElement = destination.name.length !== 0 ? createEventFormDestinationTemplate(destination) : '';
+  const getSubmitSaving = isSaving ? 'Saving...' : 'Save';
+  const getInputDisabled = isDisabled ? 'disabled' : '';
+  const getSubmitDisabled = valueStartTime > valueFinishTime || !destination.name || isDisabled ? 'disabled' : '';
 
-  const isRollupButton = isEditForm ? '<button class="event__rollup-btn" type="button">' : '';
+  const getOffersElement = offersByType.length !== 0 ? createEventFormOffersTemplate(id, offers, offersByType) : '';
+  const getDestinationElement = destination.name.length !== 0 ? createEventFormDestinationTemplate(destination) : '';
+
+  const createEventRollupBtn = `${isEditForm ? `<button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
+  <span class="visually-hidden">Open event</span>
+</button>`: ''}`;
+
+  const createEventResetBtnName = (isEditFormFlag, isDeletingFlag) => {
+    if (!isEditFormFlag) {
+      return 'Cancel';
+    }
+
+    return (isDeletingFlag) ? 'Deleting...' : 'Delete';
+  };
 
   return `<form class="event event--edit" action="#" method="post">
   <header class="event__header">
@@ -35,8 +47,8 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Event type</legend>
 
-          ${Object.values(PointTypes).map((pointType) => (`<div class="event__type-item">
-          <input id="event-type-${pointType}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}">
+          ${typePoints.map((pointType) => (`<div class="event__type-item">
+          <input id="event-type-${pointType}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}" ${getInputDisabled}>
           <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-${id}">${pointType}</label>
         </div>`)).join('\n')}
         </fieldset>
@@ -47,7 +59,7 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
       <label class="event__label  event__type-output" for="event-destination-${id}">
         ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${id}">
+      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${id}" ${getInputDisabled}>
       <datalist id="destination-list-${id}">
       ${typeCities.map((cityPoint) => (
     `<option value="${cityPoint}"></option>`)).join('\n')}
@@ -56,10 +68,10 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
 
     <div class="event__field-group  event__field-group--time">
       <label class="visually-hidden" for="event-start-time-${id}">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${valueStartTime}">
+      <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${valueStartTime}" ${getInputDisabled}>
       &mdash;
       <label class="visually-hidden" for="event-end-time-${id}">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${valueFinishTime}">
+      <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${valueFinishTime}" ${getInputDisabled}>
     </div>
 
     <div class="event__field-group  event__field-group--price">
@@ -67,24 +79,21 @@ const createEventFormEditTemplate = (data, allOffers, destinations, isEditForm) 
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}">
+      <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}" ${getInputDisabled}>
     </div>
 
-    <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled}>Save</button>
-    <button class="event__reset-btn" type="reset">${isEditForm ? 'Delete' : 'Cancel'}</button>
-    ${isRollupButton}
-      <span class="visually-hidden">Open event</span>
-    </button>
+    <button class="event__save-btn  btn  btn--blue" type="submit"${getSubmitDisabled}> ${getSubmitSaving}</button>
+    <button class="event__reset-btn" type="reset" ${getInputDisabled}>${createEventResetBtnName(isEditForm, isDeleting)}</button>
+    ${createEventRollupBtn}
   </header>
   <section class="event__details">
-  ${isOffersElement}
-  ${isDestinationElement}
+  ${getOffersElement}
+  ${getDestinationElement}
   </section>
 </form>`;
 };
 
 const BLANK_POINT = {
-  id: nanoid(),
   type: 'taxi',
   destination: {
     description: '',
@@ -95,6 +104,7 @@ const BLANK_POINT = {
   dateTo: new Date(),
   basePrice: 1,
   offers: [],
+  isFavorite: false,
 };
 
 export default class EventForm extends SmartView {
@@ -174,7 +184,7 @@ export default class EventForm extends SmartView {
     evt.preventDefault();
     const city = evt.target.value;
     const inputValue = this.getElement().querySelector('.event__input--destination');
-    const typeCities = this._destinations.map((it) => it.name);
+    const typeCities = this._destinations.map((destination) => destination.name);
     if (!city || !matchCity(city, typeCities)) {
       inputValue.setCustomValidity('Сhoose a city from the list');
     } else {
@@ -193,15 +203,14 @@ export default class EventForm extends SmartView {
   _priceInputHandler(evt) {
     evt.preventDefault();
     const inputValue = this.getElement().querySelector('.event__input--price');
-    const price = evt.target.value;
-    const priceNumber = Number(price);
+    const price = Number(evt.target.value);
 
-    if (!price || priceNumber < 0 || !priceNumber) {
+    if (!price || price < 0) {
       inputValue.setCustomValidity('The field must be filled with a positive number');
     } else {
       inputValue.setCustomValidity('');
       this.updateData({
-        basePrice: priceNumber,
+        basePrice: price,
       });
     }
 
@@ -306,11 +315,20 @@ export default class EventForm extends SmartView {
   }
 
   static parsePointToData(point) {
-    return Object.assign({}, point);
+    return Object.assign({}, point, {
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    });
   }
 
   static parseDataToPoint(data) {
     data = Object.assign({}, data);
+
+    delete data.isDisabled;
+    delete data.isSaving;
+    delete data.isDeleting;
+
     return data;
   }
 }
