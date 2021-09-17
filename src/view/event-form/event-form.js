@@ -126,8 +126,7 @@ export default class EventForm extends SmartView {
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._startTimeHandler = this._startTimeHandler.bind(this);
     this._endTimeHandler = this._endTimeHandler.bind(this);
-    this._offersСhangeHandler = this._offersСhangeHandler.bind(this);
-
+    this._offersChangeHandler = this._offersChangeHandler.bind(this);
     this._setInnerHandelers();
   }
 
@@ -152,7 +151,7 @@ export default class EventForm extends SmartView {
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._cityChangeHandler);
     this.getElement().querySelector('.event__input--price').addEventListener('change', this._priceInputHandler);
     if (this.getElement().querySelector('.event__available-offers')) {
-      this.getElement().querySelector('.event__available-offers').addEventListener('change', this._offersСhangeHandler);
+      this.getElement().querySelector('.event__available-offers').addEventListener('change', this._offersChangeHandler);
     }
 
     this._setDatePicker();
@@ -277,7 +276,7 @@ export default class EventForm extends SmartView {
     }
   }
 
-  _offersСhangeHandler(evt) {
+  _offersChangeHandler(evt) {
     evt.preventDefault();
     const checkboxes = [...this.getElement().querySelectorAll('.event__offer-checkbox')];
     const checkedCheckboxes = [];
