@@ -99,3 +99,7 @@ Promise.all([
   .catch(() => {
     pointsModel.setPoints(UpdateType.INIT, []);
   });
+
+window.addEventListener('load', () => {
+  navigator.serviceWorker.register('/sw.js');
+});
