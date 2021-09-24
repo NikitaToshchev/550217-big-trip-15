@@ -89,4 +89,14 @@ export default class Api {
   static catchError(err) {
     throw err;
   }
+
+  sync(data) {
+    return this._load({
+      url: `${EndPoints.POINTS}/${EndPoints.SYNC}`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+    })
+      .then(Api.toJSON);
+  }
 }

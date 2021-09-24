@@ -60,6 +60,7 @@ export const EndPoints = {
   POINTS: 'points',
   OFFERS: 'offers',
   DESTINATIONS: 'destinations',
+  SYNC: 'sync',
 };
 
 export const State = {
