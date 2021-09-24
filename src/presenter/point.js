@@ -4,6 +4,8 @@ import EventFormView from '../view/event-form/event-form.js';
 import ListItemView from '../view/list-item.js';
 import { Mode, UserAction, UpdateType, State } from '../const.js';
 import { isEscEvent } from '../utils/common.js';
+import { isOnline } from '../utils/common.js';
+import { toast } from '../utils/toast.js';
 
 export default class Point {
   constructor(pointListContainer, changeData, changeMode) {
@@ -126,6 +128,11 @@ export default class Point {
   }
 
   _handleRollupBtnClick() {
+    if (!isOnline()) {
+      toast('You can\'t edit point offline');
+      return;
+    }
+
     this._replacePointToForm();
   }
 
@@ -135,6 +142,12 @@ export default class Point {
   }
 
   _handleFormSubmit(update) {
+    if (!isOnline()) {
+      toast('You can\'t save point offline');
+      this._eventFormComponent.shake();
+      return;
+    }
+
     this._changeData(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
@@ -157,6 +170,12 @@ export default class Point {
   }
 
   _handleDeleteClick(point) {
+    if (!isOnline()) {
+      toast('You can\'t delete point offline');
+      this._eventFormComponent.shake();
+      return;
+    }
+
     this._changeData(
       UserAction.DELETE_POINT,
       UpdateType.MINOR,

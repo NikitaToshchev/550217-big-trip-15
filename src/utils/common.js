@@ -7,3 +7,5 @@ export const sortDay = (pointA, pointB) => dayjs(pointA.dateFrom) - dayjs(pointB
 export const matchCity = (city, array) => array.some((it) => it === city);
 
 export const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+
+export const isOnline = () => window.navigator.onLine;
