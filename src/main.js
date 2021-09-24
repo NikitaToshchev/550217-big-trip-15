@@ -1,6 +1,6 @@
 import { RenderPosition, render, remove } from './utils/render.js';
 import { MenuItem, UpdateType } from './const.js';
-import Api from './api.js';
+import Api from './api/api.js';
 
 import MenuView from './view/menu.js';
 import StatsView from './view/stats.js';

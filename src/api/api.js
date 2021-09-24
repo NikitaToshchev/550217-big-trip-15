@@ -1,5 +1,5 @@
-import PointsModel from './model/points.js';
-import { EndPoints } from './const.js';
+import PointsModel from '../model/points.js';
+import { EndPoints } from '../const.js';
 
 const Method = {
   GET: 'GET',
